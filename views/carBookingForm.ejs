@@ -1,0 +1,188 @@
+<!-- ***** Header Area Start ***** -->
+<%-include('./partials/header.ejs') %>
+<!-- ***** Header Area End ***** -->
+
+        <div class="row justify-content-center" style="margin-top: 90px;">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between">
+                <p>Car Reservation Form</p>                
+              </div>
+              <article class="card-body">
+                <p class="my-1 mb-3 text-secondary"> Dear
+                  <span class="text-primary h5"><%= customer.fullName %> </span>, 
+                  You are few clicks away to reserve 
+                  <a href="/vehicles/carDetails/withId/<%= car._id %> "> <%= car.fullName %> </a>.
+                  Kindly Provide Some More Details. 
+                </p> 
+
+                <form action="/vehicles/reserveCar/withIds/<%= customer._id %>/<%= car._id %>" 
+                  method="post">                                                        
+        
+                  <div class="row">
+                    <div class="col-md-6 form-group">
+                      <label for="bookingDate">Booking Date</label>
+                      <input type="date" name="bookingDate" id="bookingDate" class="form-control inputField" required>
+                      <small class="text-secondary">mm/dd/yyyy</small>
+                    </div>
+                    <div class="col-md-6 form-group">
+                      <label for="bookingDays">Number of Days</label>
+                      <input type="text" id="bookingDays" name="bookingDays"                       
+                      class="form-control inputField" placeholder="2 or 3 etc." required>
+                      <small class="text-secondary">For how many days you want to reserve this car?</small>
+                    </div>
+                  </div>
+                  
+                  <span id="rentPerDay" style="display: none;"><%= car.rentPerDay %> </span>                  
+                  
+                  <div class="row">
+                    <div class="col-md-12 form-group">
+                      <label for="phoneNumber">Mobile Number</label>
+                      <input type="tel" name="phoneNumber" 
+                      class="form-control phoneNumber inputField" id="phoneNumber" required
+                      placeholder="03319844648">
+                      <small class="phoneNumberError">You will need to verify this.</small>                                      
+                    </div> 
+                  </div>
+
+                  <div class="row">
+                    <div class=" col-md-6 form-group">
+                      <label for="returningDate">You'll need to return car on :</label>
+                      <input type="text" id="returningDate" name="returningDate" disabled placeholder="Enter Days to know" class="form-control">              
+                      <small class="text-secondary">dd/mm/yyyy</small>
+                    </div>
+                    <div class="col-md-6 form-group">
+                      <label for="rent">You'll need to Pay : </label>
+                      <input type="text" id="rent" name="rent" disabled placeholder="Select Date & Enter Days" class="form-control">
+                    </div>
+                  </div>
+                  
+                  <div class="row w-100">                   
+                    <div class="col-md-8 mx-auto">
+                      <button type="submit" 
+                      class="form-submit btn btn-primary btn-block rounded-pill"
+                      disabled="true" style="cursor: not-allowed;"
+                      id="btn">
+                      <span id="btnText">Send Request</span> 
+                      <span id="span1" class="loadingSpan  ml-2" ></span> 
+                      <span id="span2" class="loadingSpan ml-1" ></span> 
+                      <span id="span3" class="loadingSpan ml-1" ></span>
+                    </button>              
+                    </div>                    
+                  </div> 
+
+                </form>
+              </article>
+            </div> <!-- Card ending  -->
+          </div> <!-- Col ending  -->
+        </div> <!-- Row ending  -->                  
+    <!-- End of car booking form -->
+
+  <script>            
+    // Returning Date and total Rent Calculation ... // ... //
+    const bookingDate = document.getElementById('bookingDate'),
+          bookingDays = document.getElementById('bookingDays'),
+          rentPerDayInForm = document.getElementById('rentPerDay'),
+          returningDate = document.getElementById('returningDate'),
+          rent = document.getElementById('rent');
+
+    
+          bookingDays.addEventListener('keyup',()=>{         
+          let 
+          rentPerDay = parseInt(rentPerDayInForm.textContent),          
+          bookingDaysValue = parseInt(bookingDays.value),
+          bookingDateValue = bookingDate.value;                                          
+
+          //Find out booking day , month and year by slicing booking date value ...
+          let bookingDay = parseInt(bookingDateValue.slice(8)),
+              bookingMonth = parseInt(bookingDateValue.slice(5,8));
+              bookingYear =  parseInt(bookingDateValue.slice(0,4)); 
+
+              //Car returning date preperation ...
+              returnDay = 0,
+              returnMonth = 0,
+              returnYear = 0;
+
+          //Number of days in each month ...
+          let january = 31,feberuary = 28,march=31,april=30,may=31,june=30,july=31,august=31,september=30,october=31,november=30,december=31;
+          
+          let totalDays = bookingDaysValue + bookingDay ;
+
+          //Recognize month, then add days according to that month
+          switch(bookingMonth){
+            case 1 : 
+            //check is a function that has three arguments(bookingYear,bookingMonth,totalDays);
+            check(bookingYear,january , totalDays);                       
+              break;
+            case 2:
+              check(bookingYear,feberuary,totalDays);
+              break;
+            case 3:
+              check(bookingYear,march,totalDays);
+              break;
+            case 4:
+              check(bookingYear,april,totalDays);
+              break;
+            case 5:
+              check(bookingYear,may,totalDays);
+              break;
+            case 6:
+              check(bookingYear,june,totalDays);
+              break;
+            case 7:
+              check(bookingYear,july,totalDays);
+              break;
+            case 8:
+              check(bookingYear,august,totalDays);
+              break;
+            case 9:
+              check(bookingYear,september,totalDays);
+              break;
+            case 10:
+              check(bookingYear,october,totalDays);
+              break;
+            case 11:
+              check(bookingYear,november,totalDays);
+              break;
+            case 12:
+              check(bookingYear,december,totalDays);
+              break;
+            default:
+              alert("Something's Wrong With Booking Month");
+            break;
+          }
+
+          // Function for checking days,month and year.
+          function check(year, month, days){
+              if(days > month){
+                returnDay = (days - month);
+                returnMonth = (bookingMonth+1) ;  
+
+                if(returnMonth > 12){
+                returnMonth = (returnMonth - 12) ;              
+                returnYear = (year + 1) ;              
+              }
+              else{
+                returnYear = year ;
+              }
+              }
+              
+              else{
+                returnDay = days ;
+                returnMonth = bookingMonth;
+                returnYear = year ;                          
+              }
+              //set the value of returning date input box.
+              returningDate.value = returnDay + "-"+returnMonth+"-"+returnYear;            
+          } 
+    
+          totalrent = rentPerDay * bookingDaysValue ;
+          rent.value = totalrent + " PKR" ;
+    })
+    // End of returning Date and total Rent Calculation ... // ... //
+
+    </script>     
+
+<!-- ***** Header Area Start ***** -->
+<%-include('./partials/footer.ejs') %>
+<!-- ***** Header Area End ***** -->

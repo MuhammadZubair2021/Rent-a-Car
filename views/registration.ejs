@@ -1,0 +1,95 @@
+
+<%- include('./partials/header.ejs')  %> 
+
+<div class="container mt-5 pt-5">
+  <div class="card">
+    <div class="card-header">
+      <div class="d-flex justify-content-between">
+        <h3>Registration Form</h3>        
+      </div>
+    </div>
+    <div class="card-body">
+      <form action="/registration" method="post">
+        <div class="row w-100">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="cnic">CNIC NO</label>
+              <input required type="text" pattern="\d{5}-\d{7}-\d{1}" 
+              name="cnic" class="form-control cnic inputField">
+              <small class="form-text">CNIC No format : xxxxx-xxxxxxx-x </small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input required type="text" name="fullName" class="form-control inputField" 
+              placeholder="Muhammad Bilal">
+            </div>
+          </div>
+        </div>
+
+        <div class="row w-100">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input required type="email" name="email" class="email form-control inputField" 
+              placeholder="abc@gmail.com">
+              <small class="emailError form-text"></small>
+            </div>
+          </div>
+        </div>
+
+        <div class="row w-100">
+          <div class="col-md-12">
+            <div class="form-group-inline">
+              <label for="male">Male  </label>
+              <input  type="radio" required id="male" value="male" name="gender"> &nbsp;&nbsp;&nbsp;
+              <label for="male">Female   </label> 
+              <input  type="radio" required id="female" value="female" name="gender">
+            </div>
+          </div>         
+        </div>
+       
+        <div class="row w-100">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input required type="password" class="form-control password inputField" 
+              name="password">
+              <span onclick="togglePassVisibility()" class="btn btn-secondary btn-sm mt-2 toggleBtn">Show</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="repeatPassword">Confirm Password</label>
+              <input required type="password" class="form-control repeatPassword inputField">
+              <small class="repeatPasswordError form-text"></small>
+            </div>
+          </div>
+        </div>       
+
+        <div class="row w-100 mt-2">
+          <div class="col-md-6">
+            <button type="submit" class="form-submit btn btn-primary btn-block mb-2" disabled="true"
+            id="btn">
+                    <span id="btnText">GET REGISTER</span> 
+                    <span id="span1" class="loadingSpan  ml-2" ></span> 
+                    <span id="span2" class="loadingSpan ml-1" ></span> 
+                    <span id="span3" class="loadingSpan ml-1" ></span>
+            </button>
+          </div>
+          <div class="col-md-6">
+            <button type="reset" class="btn btn-warning btn-block">CLEAR FORM</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="border-top card-body text-center mb-2">Already have an account ! <a href="/user/login">Log In</a></div>
+  </div>
+</div> 
+
+<script>
+</script>
+<!--container end.//-->
+
+<%- include('./partials/footer.ejs')  %> 

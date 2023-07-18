@@ -1,0 +1,106 @@
+    
+    <!-- ***** Header Area Start ***** -->
+    <%-include('./partials/header.ejs') %>
+    <!-- ***** Header Area End ***** -->
+<div class="container" style="margin-top: 90px;">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">                
+                <article class="card-body">                                            
+                        <div class="form-group">
+                            <div class="form-control">
+                                <h4 class="text-center mb-2">I have a unique Idea!</h4>
+                            </div>
+                            <a href="/addIdea" id="serachBtn" style="color: beige;" class="btn btn-primary btn-block">Want to share.</a>
+                        </div> <!-- form-group end.// -->                                               
+                </article>                
+            </div>
+        </div>        
+        <div class="col-md-3">
+            <div class="card">                
+                <article class="card-body">                    
+                    <form action="/ideas/filterIdeas/" method="POST">
+                        <div class="form-group">
+                            <select id="category" required name="category" class="form-control">		    
+                                <option value="">Apply filter</option>
+                                <option value="All">All</option>
+                                <option value="Android App">Android Apps</option>
+                                <option value="Website">Website</option>
+                                <option value="Flutter App">Flutter Apps</option>
+                                <option value="IOS App">IOS Apps</option>
+                                <option value="Desktop App">Desktop Apps</option>
+                                <option value="other type Idea">Others</option>
+                              </select>
+                              <button type="submit" id="serachBtn" class="btn btn-primary btn-block"> Apply </button>
+                        </div> <!-- form-group end.// -->
+                        <div class="form-group">
+                            
+                        </div> <!-- form-group// -->  
+                    </form>                          
+                </article>   
+            </div>            
+        </div>
+    </div>
+</div>
+   
+<div class="container-fluid pb-5" style="background-color: #009CD9;">
+    <div class="container mt-5">
+        <div class="row ">
+           <% if(ideas.length>0){ %>
+                <%ideas.forEach(idea=>{ %> 
+                    <% if(idea.approved){ %>
+                        <div class="col-md-4 mt-5">
+                            <div class="card p-3">
+                                <% if(idea.image=='null'){ %>
+                                    <div class="d-flex flex-row mb-3"><img src="/public/images/ideaAvatar.png" width="70" height="70">                                    
+                                <% }else{ %>
+                                    <div class="d-flex flex-row mb-3"><img src="/<%=idea.image%>" width="70" height="70">
+                                <%}%>
+                                    <div class="d-flex flex-column ml-2"><span><%=idea.title%></span>
+                                        <%if(idea.numOfDevelopers==1){%>
+                                            <span class="text-black-50"><a href="/userProfile/<%=idea.author.id%>"> <%=idea.author.fullName%></a></span>
+                                        <%}else if(idea.numOfDevelopers==2){%>
+                                            <span class="text-black-50"><a href="/userProfile/<%=idea.author.id%>"><%=idea.author.fullName%></a> and 1 other</span>
+                                        <%}else if(idea.numOfDevelopers==3){%>
+                                            <span class="text-black-50"><a href="/userProfile/<%=idea.author.id%>"><%=idea.author.fullName%></a> and 2 others</span>
+                                        <%}else if(idea.numOfDevelopers==4){%>
+                                            <span class="text-black-50"><a href="/userProfile/<%=idea.author.id%>"><%=idea.author.fullName%></a> and 3 others</span>
+                                        <%}else if(idea.numOfDevelopers==5){%>
+                                            <span class="text-black-50"><a href="/userProfile/<%=idea.author.id%>"><%=idea.author.fullName%></a> and 4 others</span>
+                                        <%}%>
+            
+                                </div></div>
+                                <h6>
+                                    <%if((idea.discription).length>100){%>
+                                        <%=(idea.discription).substr(0,100) + '...'%>                       
+                                    <%}else{%>
+                                        <%=idea.discription + '...'%>
+                                        <%}%>                      
+                                </h6>
+                                <div  class="d-flex justify-content-between install mt-3 "><span><%=idea.category%></span><a href="/showOneIdea/<%=idea._id %>">Details View</a></div>
+                            </div>
+                        </div>
+                        <% } %>
+                    <%})%> 
+           <% }else{ %>
+            <div class="row justify-content-center" style="width: 100%;text-align: center; margin: 50px 20%">
+                <div class="col-md-12">
+                    <div class="card">                
+                        <article class="card-body">                                            
+                                <div class="form-group">
+                                <h2>Sorry! No record found..</h2>
+                                </div> <!-- form-group end.// -->
+                                <div class="form-group">
+                                    <a href="/ideas" id="serachBtn" style="color: beige;" class="btn btn-primary btn-block"> Bring all back </a>
+                                </div> <!-- form-group// -->                          
+                        </article>   
+                    </div> 
+                </div>
+            </div> 
+           <% } %>
+                       
+        </div>
+    </div>            
+</div>
+    <!-- ***** Footer below ***** -->
+    <%- include('./partials/footer.ejs') %>

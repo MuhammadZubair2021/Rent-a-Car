@@ -1,0 +1,76 @@
+ 
+    
+    <!-- ***** Header Area Start ***** -->
+    <%-include('./partials/header.ejs') %>
+    <!-- ***** Header Area End ***** -->
+
+
+<div class="row justify-content-center" style="margin-top: 90px;">
+<div class="col-md-6">
+<div class="card">
+  <div class="card-header">
+    DPaPIC Login Form
+  </div>
+<article class="card-body">
+  <div class="card-title">
+    Login yourself    
+  </div>
+<form action="/signIn" method="POST">	    
+
+	<div class="form-group">
+		<label>Email address</label>
+		<input type="email" id="email" name="username" required  class="form-control" placeholder="Your email...">
+    <small class="form-text" style="color: red;" id="emailError"></small>
+	</div> <!-- form-group end.// -->
+	
+	<div class="form-group">
+		<label>Password</label>
+	    <input class="form-control" id="password" required name="password" type="password">
+      <label for="passCheck"><input id="passCheck" type="checkbox" onclick="togglePassVisibility()">  Show Password </label>
+	</div> <!-- form-group end.// -->  
+    <div class="form-group">
+        <button type="submit" id="signInBtn" class="btn btn-primary btn-block"> SIGN IN  </button>
+    </div> <!-- form-group// -->         
+</form>
+</article> <!-- card-body end .// -->
+<div class="border-top card-body text-center">Don't have an account? <a href="/signUp">Register</a></div>
+</div> <!-- card.// -->
+</div> <!-- col.//-->
+
+</div> <!-- row.//-->
+
+</div> 
+<script>
+
+function togglePassVisibility() {
+  var x = document.getElementById("password");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+const emailField = document.getElementById('email'),
+      emailError = document.getElementById('emailError');
+
+function isValidEmail(email) {
+	var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+	return !!email && typeof email === 'string'
+		&& email.match(emailRegex)};
+
+emailField.addEventListener('blur',()=>{
+  const emailValue = emailField.value ; 
+  if(isValidEmail(emailValue)==null){
+    emailError.textContent = "Please Provide a valid email address";
+    emailField.focus();
+    return false;
+  }
+  else{
+    emailError.textContent = " ";
+  }
+})
+</script>
+<!--container end.//-->
+
+    <!-- ***** Footer below ***** -->
+    <%- include('./partials/footer.ejs') %>

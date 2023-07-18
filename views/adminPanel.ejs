@@ -1,0 +1,3500 @@
+<%-include('./partials/header.ejs')%>
+
+
+<style>
+  div.dashboardModal{
+    transition: all 3s;
+  }
+  .show{
+    display: block;
+  }
+  .hide{
+    display: none;
+  }
+  .lineHeight4{
+    line-height:4rem ;
+  }
+</style>
+
+
+<div class="container" style="margin-top:90px;">
+  <div class="row w-100">
+    <div class="col-md-12 col-lg-12 my-2">
+      <h2 class="text-primary welcomeUserName">
+        <strong>Welcome, <%= currentUser.fullName %> </strong>
+      </h2>    
+    </div>
+  </div>
+
+    <div class="row w-100 mt-5">
+    <!-- Menu starts -->
+      <div class="col-md-4 border-right border-top pt-3 pb-3">
+        <div class="row mb-1">
+          <div class="col-md-12">
+            <a href="#" class="adminProfile menu"><strong>Profile</strong></a>
+          </div>
+        </div>
+
+        <hr size="10%" width="80%" color="brown">
+
+        <div class="row my-1">
+          <div class="col-md-12 text-primary">
+           <strong> Customers 
+             <img src="/public/images/searchIcon.jpg" width="7%" style="cursor: pointer;" 
+            onclick="toggleCustomersSearchBar()" class="ml-1" alt="Search"> </strong> &nbsp; &downarrow;
+          </div>
+        </div>
+       
+      <!-- Some Ejs to sort out the amount which comming from route perameter (amount) -->  
+        <%
+        let newAmount = 0,
+            allFlag,
+            customersGreaterAmountFlag ;
+
+        if (flag == 'customers'){
+          if(amount =='1000'){
+            newAmount = customers.length ;
+            allFlag = 'on' ;                         
+          }
+          else if(amount > customers.length)
+          {
+            newAmount = customers.length ;
+            customersGreaterAmountFlag = 'on' ;             
+          }else{
+            newAmount = amount ;              
+          }
+        }%>
+      <!-- End of sorting Out amount, ejs -->
+
+
+        <!-- Customer search box and show all Customer hint (in case not loaded all customers) -->
+        <div class="row my-1 mr-1" >
+          <input type="text" class="form-control hide" id="customersSearchBar">
+          <!-- load all customer hint -->
+          <% if(allFlag !='on'){ %>       
+            <small class="text-black-50 hide" id="customersSearchHint">Kindly, 
+              <a href="/adminPanel/<%=(1000)%>/customers">Load all Customers</a>
+              for better search.</small>
+            <% } %>
+        </div>
+      
+      <!-- Now show/render customers detail according to amount (comming from adminPanel route) -->
+        <div class="row">          
+          <% for(i=0 ; i<(parseInt(newAmount)) ; i++){ %> <!-- Iterate through each Customer-->
+          <div class="col-md-10 ml-2"> 
+            <a href="#" class="customerNameElement menu" onclick="showCustomerDetails('<%=i%>')">
+              <%= (i+1) %> : <%= customers[i].fullName %></a>
+          </div>
+         <% } %>
+        </div>
+
+        <!-- Load more customers ul (just like select box) -->
+        <div class="row mb-1">
+          <div class="col-md-10 my-2">           
+            <ul class="unstyled">
+              <small><li onclick="loadCustomersVisibility()"
+                style="cursor: pointer;" class="border-left pl-2 border-top my-2">
+                    load more customers ...</li></small>
+              <li class="loadCustomers hide"><a href="/adminPanel/<%=(5)%>/customers"> 1  -  5 Customers</a></li>
+              <li class="loadCustomers hide"><a href="/adminPanel/<%=(10)%>/customers">1  - 10 Customers</a></li>
+              <li class="loadCustomers hide"><a href="/adminPanel/<%=(15)%>/customers"> 1  - 15 Customers</a></li>
+              <li class="loadCustomers hide"><a href="/adminPanel/<%=(20)%>/customers">1  - 20 Customers</a></li>
+              <li class="loadCustomers hide"><a href="/adminPanel/<%=(1000)%>/customers">Show All Customers</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <% if(allFlag == 'on'){ %>
+          <small class="text-black-50 my-2">
+            Showed all customers.
+          </small>
+          <% }else if(customersGreaterAmountFlag== 'on'){%>
+            <small class="text-black-50 my-2">
+              Showed all customers because requested amount is greater than Customers length .
+            </small>
+          <% }else if(newAmount>2){%>
+            <small class="text-black-50 my-2">
+              Above is your requested result.
+            </small>
+          <% } %>
+        <!--  Customers detials end //////  -->
+        
+        <hr size="10%" width="80%" color="brown" class="my-2">  <!-- A brown Seperator-->
+
+        <div class="row my-1">
+          <div class="col-md-12 text-primary">
+           <strong> Cars 
+             <img src="/public/images/searchIcon.jpg" width="7%" style="cursor: pointer;" 
+            onclick="toggleCarsSearchBar()" class="ml-1" alt="Search"> </strong> &nbsp; &downarrow;
+          </div>
+        </div>
+
+        <% 
+        let 
+        carAmount = 2,
+        carAllFlag ,
+        carGreaterAmountFlag;
+
+          if (flag == 'cars'){
+            if(amount =='1000'){
+              carAmount = cars.length ;
+              carAllFlag = 'on' ;                         
+            }
+            else if(amount > cars.length)
+            {
+              carAmount = cars.length ;
+              carGreaterAmountFlag = 'on' ;             
+            }else{
+              carAmount = amount ;              
+            }
+          }%>
+        
+        <!-- Car search box and show all cars hint (in case not loaded all cars) -->
+        <div class="row my-1 mr-1">
+          <input type="text" class="form-control hide"  id="carsSearchBar">          
+        <% if(carAllFlag != 'on'){ %>         
+              <small class="text-black-50 hide" id="carSearchHint">Kindly, 
+                <a href="/adminPanel/<%=(1000)%>/cars">Load all Cars</a>
+              for better search.</small>
+        <% }%>           
+        </div>
+
+      <!-- Now show the cars Name according to amount (comming from adminPanel route) -->
+      <div class="row">
+        <% for(i=0 ; i<(parseInt(carAmount)) ; i++){ %> <!-- Iterate through each car-->
+        <div class="col-md-10 ml-2"> 
+          <a href="#" class="carNameElement menu" onclick="showCarDetails('<%=i%>')"><%= (i+1) %> : <%= cars[i].fullName %></a>
+        </div>
+       <% } %>
+      </div>
+
+       <!-- Load more cars ul (just like select box) -->
+        <div class="row mb-2">
+          <div class="col-md-10 my-2">           
+            <ul class="unstyled">
+              <small><li onclick="loadCarsVisibility()"
+                style="cursor: pointer;" class="border-left pl-2 border-top my-2">
+                    Load more Cars ...</li></small>
+              <li class="loadCars hide"><a href="/adminPanel/<%=(5)%>/cars"> 1  -  5 Cars</a></li>
+              <li class="loadCars hide"><a href="/adminPanel/<%=(10)%>/cars">1  - 10 Cars</a></li>
+              <li class="loadCars hide"><a href="/adminPanel/<%=(15)%>/cars"> 1  - 15 Cars</a></li>
+              <li class="loadCars hide"><a href="/adminPanel/<%=(20)%>/cars">1  - 20 Cars</a></li>
+              <li class="loadCars hide"><a href="/adminPanel/<%=(1000)%>/cars">Show All Cars</a></li>
+            </ul>
+          </div>
+        </div>
+        
+          <% if(carAllFlag === 'on'){ %>
+            <small class="text-black-50 my-2">
+              showed all Cars.
+            </small>
+            <% }else if(carGreaterAmountFlag == 'on') {%>
+              <small class="text-black-50 my-2">
+                showed all Cars because, Amount is greater than Cars length.
+              </small>           
+            <% }else if(carAmount>2) {%>
+              <small class="text-black-50 my-2">
+                Above is your requested result.
+              </small>
+            <% } %>
+        
+        
+        <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){%>
+        <div class="row my-2">
+          <div class="col-md-10">
+           <a href="#" class="menu" id="carRegistrationBtn">Add a Car</a>
+          </div>
+        </div>
+        <% } %>
+      <!-- Cars Menu end -->      
+
+      <hr size="10%" width="80%" color="brown">
+      
+      <div class="row mb-1">
+        <div class="col-md-12">
+          <a href="#" class="menu" id="shopMenu" style="color: rgb(245, 88, 88);"><strong>Shop (Bargain) details</strong></a>
+        </div>
+      </div>
+      <div class="row mb-1">
+        <div class="col-md-10 mr-auto">
+          <small class="text-black-50">By default we will show the shop / bargain details</small>
+        </div>
+      </div>
+      
+      
+      <!-- Not Verified Reservations Menu -->
+      <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){%>
+      <% if (notVerifiedReservations.length > 0) { %>
+        <hr size="10%" width="80%" color="brown" class="my-2">  <!-- A brown Seperator-->
+
+        <div class="row my-1">
+          <div class="col-md-12 text-primary">
+           <strong> Not Verified Reservations 
+             <img src="/public/images/searchIcon.jpg" width="7%" style="cursor: pointer;" 
+            onclick="toggleNotVerifiedReservationsSearchBar()" class="ml-1" alt="Search"> </strong> &nbsp; &downarrow;
+          </div>
+        </div>
+
+        <!-- Reservation search box -->
+        <div class="row my-1 mr-1">
+          <input type="text" class="form-control hide"  id="notVerifiedReservationsSearchBar">                            
+        </div>
+      
+       
+        <!-- Now show the Reference No.-->
+        <% notVerifiedReservations.forEach((reservation,index)=>{ %> <!-- Iterate through each reservation-->
+          <div class="row">
+            <div class="col-md-10 ml-2"> 
+              <a href="#" class="notVerifiedReservationRefNo menu" 
+              onclick="showNotVerifiedReservationDetails('<%=index%>')">          
+              <%= (index+1) %> : <%= reservation.customerName %> (<%= reservation.referenceNo %>)</a>          
+            </div>
+          </div>                     
+          <% }) %>
+        <% }} %>
+      <!-- End of not Verified Reservations Menu -->                     
+        
+
+      <!-- Not Confirmed Reservations Menu -->
+      <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){%>
+      <% if (notConfirmedReservations.length > 0) { %>       
+        <hr size="10%" width="80%" color="brown" class="my-2">  <!-- A brown Seperator-->
+        
+        <div class="row my-1">
+          <div class="col-md-12 text-primary">
+            <strong> Not Confirmed Reservations 
+              <img src="/public/images/searchIcon.jpg" width="7%" style="cursor: pointer;" 
+              onclick="toggleNotConfirmedReservationsSearchBar()" class="ml-1" alt="Search"> </strong> &nbsp; &downarrow;
+            </div>
+          </div>
+          
+          <!-- Reservation search box and show all Reservations hint (in case not loaded all cars) -->
+          <div class="row my-1 mr-1">
+            <input type="text" class="form-control hide"  id="notConfirmedReservationsSearchBar">                            
+          </div>
+          
+          <!-- Now show the Reference No.-->
+          <% notConfirmedReservations.forEach((reservation,index)=>{ %> <!-- Iterate through each reservation-->
+            <div class="row">
+              <div class="col-md-10 ml-2"> 
+                <a href="#" class="notConfirmedReservationRefNo menu" 
+                onclick="showNotConfirmedReservationDetails('<%=index%>')">          
+                <%= (index+1) %> : <%= reservation.customerName %> (<%= reservation.referenceNo %>)</a>          
+              </div>
+            </div>                     
+            <% }) %>
+          <% }} %>
+      <!-- End of Not Confirmed Reservations Menu -->              
+
+      <!-- Active reservations Menu -->
+      <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){%>
+        <% if (activeReservations.length > 0) { %>       
+          <hr size="10%" width="80%" color="brown" class="my-2">  <!-- A brown Seperator-->
+          
+          <div class="row my-1">
+            <div class="col-md-12 text-primary">
+              <strong> Active Reservations 
+                <img src="/public/images/searchIcon.jpg" width="7%" style="cursor: pointer;" 
+                onclick="toggleActiveReservationsSearchBar()" class="ml-1" alt="Search"> </strong> &nbsp; &downarrow;
+              </div>
+            </div>
+            
+            <!-- Reservation search box and show all Reservations hint (in case not loaded all cars) -->
+            <div class="row my-1 mr-1">
+              <input type="text" class="form-control hide"  id="activeReservationsSearchBar">                            
+            </div>
+            
+            <!-- Now show the Reference No.-->
+            <% activeReservations.forEach((reservation,index)=>{ %> <!-- Iterate through each reservation-->
+              <div class="row">
+                <div class="col-md-10 ml-2"> 
+                  <a href="#" class="activeReservationRefNo menu" 
+                  onclick="showActiveReservationDetails('<%=index%>')">          
+                  <%= (index+1) %> : <%= reservation.customerName %> (<%= reservation.referenceNo %>)</a>          
+                </div>
+              </div>                     
+              <% }) %>
+            <% }} %>
+        <!-- End of Active Reservations Menu -->              
+
+        <!-- All reservations Menu -->
+        <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){%>
+          <% if (allReservations.length > 0) { %>       
+            <hr size="10%" width="80%" color="brown" class="my-2">  <!-- A brown Seperator-->
+            
+            <div class="row my-1">
+              <div class="col-md-12 text-primary">
+                <strong> All Reservations 
+                  <img src="/public/images/searchIcon.jpg" width="7%" style="cursor: pointer;" 
+                  onclick="toggleAllReservationsSearchBar()" class="ml-1" alt="Search"> </strong> &nbsp; &downarrow;
+              </div>
+            </div>
+
+            <% 
+              let 
+              allReservationsAmount = 1,
+              allReservationsAllFlag = 'off' ,
+              allReservationsGreaterAmountFlag;
+
+                if (flag == 'allReservations'){
+                  if(amount =='1000'){
+                    allReservationsAmount = allReservations.length ;
+                    allReservationsAllFlag = 'on' ;                         
+                  }
+                  else if(amount > allReservations.length)
+                  {
+                    allReservationsAmount = allReservations.length ;
+                    allReservationsGreaterAmountFlag = 'on' ;             
+                  }else{
+                    allReservationsAmount = amount ;              
+                  }}%>
+              
+            <!-- Reservation search box and show all Reservations hint (in case not loaded all cars) -->
+            <div class="row my-1 mr-1">
+              <input type="text" class="form-control hide"  id="allReservationsSearchBar">                            
+              <% if(allReservationsAllFlag != 'on'){ %>         
+                <small class="text-black-50 hide" id="allReservationsSearchHint">Kindly, 
+                  <a href="/adminPanel/<%=(1000)%>/allReservations">Load all reservations</a>
+                for better search.</small>
+              <%}%>
+            </div>
+              
+            <!-- Now show the Reference No.-->
+            <% for(index=0 ; index<(parseInt(allReservationsAmount)) ; index++){ %> <!-- Iterate through each reservation-->
+              <div class="row">
+                <div class="col-md-10 ml-2"> 
+                  <a href="#" class="allReservationsRefNo menu" 
+                  onclick="showAllReservationDetails('<%=index%>')">          
+                  <%= (index+1) %> : <%= allReservations[index].customerName %> (<%= allReservations[index].referenceNo %>)</a>          
+                </div>
+              </div>                     
+              <% } %>
+              
+              <!-- Load more reservations, ul (just like select box) -->
+              <div class="row mb-2">
+                <div class="col-md-10 my-2">           
+                  <ul class="unstyled">
+                    <small><li onclick="loadAllReservationsVisibility()"
+                      style="cursor: pointer;" class="border-left pl-2 border-top my-2">
+                      Load more reservations ...</li></small>
+                      <li class="loadAllReservations hide"><a href="/adminPanel/<%=(5)%>/allReservations"> 1  -  5 Reservations</a></li>
+                      <li class="loadAllReservations hide"><a href="/adminPanel/<%=(10)%>/allReservations">1  - 10 Reservations</a></li>
+                      <li class="loadAllReservations hide"><a href="/adminPanel/<%=(15)%>/allReservations"> 1  - 15 Reservations</a></li>
+                      <li class="loadAllReservations hide"><a href="/adminPanel/<%=(20)%>/allReservations">1  - 20 Reservations</a></li>
+                      <li class="loadAllReservations hide"><a href="/adminPanel/<%=(1000)%>/allReservations">Show All Reservations</a></li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <% if(allReservationsAllFlag === 'on'){ %>
+                  <small class="text-black-50 my-2">
+                    Showed all reservations.
+                  </small>
+                  <% }else if(allReservationsGreaterAmountFlag == 'on') {%>
+                    <small class="text-black-50 my-2">
+                      Showed all reservations because, Amount is greater than reservations length.
+                    </small>           
+                    <% }else if(allReservationsAmount>2) {%>
+                      <small class="text-black-50 my-2">
+                        Above is your requested result.
+                      </small>
+                    <% } %>                      
+            <% }} %>
+        <!-- End of All Reservations Menu -->                          
+  
+    <hr size="10%" width="80%" color="brown" class="my-2">  <!-- A brown Seperator-->
+
+      <div class="row my-1">
+        <div class="col-md-12 text-primary">
+         <strong> Settings </strong> &nbsp; &downarrow;
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10 ml-2">
+         <a href="#" class="updateProfile menu" id="updateProfile">Update Profile</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10 ml-2">
+          <a href="#" class="changePassword menu" id="changePassword">Change Password</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10 ml-2">
+          <a href="#" id="logout" class="menu">Logout</a>
+        </div>
+      </div>
+
+      <hr size="10%" width="80%" color="brown">
+
+        <div class="row my-1">
+          <div class="col-md-12 text-primary">
+           <strong> Database Users </strong> &nbsp; &downarrow;
+          </div>
+        </div>
+        <% let user%>
+        <% dbUsers.forEach((dbUser,index)=>{ %> <!-- Iterate through each dbUser-->
+        <div class="row">
+          <div class="col-md-10 ml-2">           
+           <a href="#" class="dbUserName menu" onclick="showDbUserDetails('<%=index%>')">
+            <%= (index+1) %> : <%= dbUser.fullName %></a>
+          
+          </div>
+        </div>
+        <% }) %> <!-- End of dbUsers.forEach() -->
+
+        <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){%>
+        <% if(dbUsers.length<2) { %>   <!-- Show below btn, till dbUsers.length<3 (max = 3)-->
+          <div class="row mb-1 my-2">
+            <div class="col-md-10 ml-2">
+              <a href="#" class="menu" id="addDbUserBtn">Add Db User</a>
+            </div>
+          </div>
+        <% }else{ %>
+          <div class="row mb-1">
+            <div class="col-md-10 ml-2">
+              <small class="text-black-50" style="cursor: none;">db Users (max = 2), reached</small>
+            </div>
+          </div>
+        <% } %>
+        
+        <!-- End of showing only two dbUsers -->
+        <% } %>
+        <!-- End of if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite') 
+             for showing add dbUser button-->
+        
+    </div>  <!-- End of col-md-3 (Menus)-->
+
+    <!-- xxxxxx|xxxxx -> End of Menus (col-md-3) div  xxxxxx|xxxxxx <-  xx -->
+
+      <div class="col-md-8 details pl-md-5 pt-3 pb-3  border-top">
+        
+
+        <!-- Admin  Profile-->
+        <div class="adminPanelModal hide" id="adminProfileDiv">
+          
+        <div class="row my-2 ml-md-3">
+          <div class="col-md-8 ">
+            <h3 class="text-primary"><strong>Your Profile</strong></h3>
+          </div>
+        </div>
+
+        <div class="row ml-5">
+          <div class="col-md-4 lineHeight4">
+            <strong>Name:</strong>
+          </div>
+          <div class="col-md-6 lineHeight4">
+           <%= currentUser.fullName %> 
+          </div>
+        </div>
+        
+        <div class="row ml-5">
+          <div class="col-md-4 lineHeight4">
+            <strong>CNIC:</strong>
+          </div>
+          <div class="col-md-6 lineHeight4">
+            <%=currentUser.cnic  %>
+          </div>
+        </div>
+
+      <hr size="12px" width="80%" color='#007BFF'>
+
+      <!-- Admin Contact details -->
+        <div class="row ml-3 w-100">
+          <div class="col-md-12 text-primary">
+            Contact Details
+          </div>
+        </div>
+        <div class="row ml-5">
+          <div class="col-md-4 lineHeight4">
+            <strong>Phone No#</strong>
+          </div>
+          <div class="col-md-6 lineHeight4">
+            <%=currentUser.phoneNumber  %>
+          </div>
+        </div>
+
+        <div class="row ml-5">
+          <div class="col-md-4 lineHeight4">
+            <strong>Email Address:</strong>
+          </div>
+          <div class="col-md-6 lineHeight4">
+            <a href="mailto:"><%= currentUser.email %></a>           
+          </div>
+        </div>
+      <!-- End of admin contact details -->
+      
+        <div class="row mt-5 ml-md-3">
+          <div class="col-md-4">
+            <a href="#" class="btn btn-block btn-primary updateProfile mb-1">Update Profile</a>
+          </div>
+          <div class="col-md-4">
+            <a href="#" class="changePassword btn btn-block btn-primary mb-1">Change Password</a>
+          </div>
+        </div>
+
+        </div> <!-- End of Profile div -->
+
+        <!-- Customer detail div -->
+        <% customers.forEach((customer,index)=>{ %>
+          <div class="adminPanelModal hide customerDetailsDiv<%=index%>" >
+  
+            <div class="row my-2 ml-md-3">
+              <div class="col-md-8 ">
+                <h3 class="text-primary"><strong><%=customer.fullName%> Profile</strong></h3>
+              </div>
+            </div>           
+            <div class="row ml-5">
+              <div class="col-md-4 lineHeight4">
+                <strong>Name:</strong>
+              </div>
+              <div class="col-md-6 lineHeight4">
+                <%=customer.fullName%>
+              </div>
+            </div>
+            
+            <div class="row ml-5">
+              <div class="col-md-4 lineHeight4">
+                <strong>CNIC:</strong>
+              </div>
+              <div class="col-md-6 lineHeight4">
+                <%=customer.cnic  %>
+              </div>
+            </div>
+          
+           <hr size="12px" width="80%" color='#007BFF'>
+           <!-- Customer Contact details -->
+            <div class="row ml-3 w-100">
+              <div class="col-md-12 text-primary">
+                Contact Details
+              </div>
+            </div>
+
+            <div class="row ml-5">
+              <div class="col-md-4 lineHeight4">
+                <strong>Phone No#</strong>
+              </div>
+              <div class="col-md-8 lineHeight4">
+                <small>We are taking customer Phone Number at the time of car reservation</small>
+              </div>
+            </div>
+    
+            <div class="row ml-5">
+              <div class="col-md-4 lineHeight4">
+                <strong>Email Address:</strong>
+              </div>
+              <div class="col-md-6 lineHeight4">
+                <a href="mailto:"><%= customer.email %></a>
+                
+              </div>
+            </div>
+            <!-- End of customer contact details -->
+            <hr size="12px" width="80%" color='#007BFF'>
+
+            <div class="row ml-5">
+              <div class="col-md-4 lineHeight4">
+                <strong>Gender</strong>
+              </div>
+              <div class="col-md-6 lineHeight4">
+                <%= customer.gender %>
+              </div>
+            </div>    
+
+            <hr width="40%" size="1px" color="#009ADA" class="float-left">
+              
+            <!-- By default only show customer reservations -->
+            <div class="row w-100 customer<%= index %>reservations mb-4">
+              <div class="col-md-12 col-lg-12 col-sm-12">
+                <h3 class="text-secondary"><%= customer.fullName %> Reservations
+                  <a href="#" class="btn btn-primary ml-2" 
+                  onclick="toggleCustomerReservations('<%= index %>',this)">Let's View</a>       
+                </h3>
+              </div>
+            </div>
+            <!-- End of showing only Customer.fullName Reservations-->
+            <!-- ....................+++++++ xxxxxx ++++.......................... -->
+
+            <!-- Check if this customer has no reservations -->
+            <% if (customer.myBookings.length == 0) { %>
+              <div class="row w-100 hide customer<%= index %>ReservationCheck">
+                <div class="col-md-12 col-lg-12 col-sm-12">
+                  <h5 class="text-primary mb-1">Yet, this customer haven't reserved any vehicle !</h5>                         
+                </div>
+              </div>
+            <% } else {%>
+            <!-- Customer reservation Details -->
+            <% customer.myBookings.forEach((booking,bookingIndex) => { %>
+
+              <!-- When click on above (let's View), first show reservation 
+                (carName only) and booking details-->
+              <div class="customer<%= index %>ReservationCarName hide">
+                <div class="row w-100 mb-3">
+                  <div class="col-md-12 col-lg-12 col-sm-12">
+
+                    <!-- (carName) and reservation Status -->
+                        <h5 class="text-primary mb-1 fontSize-1rem d-inline">
+                          <%= (bookingIndex+1) %> : <%= booking.carName %>
+                        </h5><br>
+                        <strong>Reservation Status : </strong>
+                        <h6 class="text-success d-inline">                                               
+                            <% if (!booking.isPhoneNumberVerified) { %>        
+                              PhoneNumber Not verified
+                            <% } else if (!booking.isConfirmed) { %>
+                              Waiting For confirmation ...
+                            <% } else if (booking.isReturned) { %>                
+                              Vehicle Returned
+                            <% } else if (booking.isConfirmed) { %>                  
+                              Active Now                                
+                            <%}%>                                      
+                        </h6> <br>                                                                                             
+                    <!-- End of (carName) and reservation Status -->
+                    
+                    <% if (booking.carId) { %>
+                      <a href="#" class="btn btn-secondary" 
+                      onclick="toggleCustomerReservationCarDetails('<%= index %>','<%= bookingIndex %>',this)">
+                      Explore <small>Car Details</small></a>       
+                    <% }else{ %>
+                      <small>This Car has been deleted or hidden by the admin (you can't see car details)</small>
+                    <% } %>
+                  </div>
+                </div>
+
+                <!-- Customer Reservation Car Details -->
+                <% if (booking.carId) { %>
+                 
+                  <div class=" hide customer<%= index %>Reservation<%= bookingIndex%>CarDetails mb-3" >  
+                    <div class="row mb-3 w-100">
+                      <div class="col-md-4">
+                        <img src="/<%= booking.carId.displayImage %>" class="thumbnail" alt="Car image" width="100%" height="70%">
+                      </div>
+              
+                      <div class="col-md-8">
+                        <div class="card p-2">
+                          <div class="d-flex flex-column mb-3">
+                            <h2 class="carName text-primary">
+                              <%= booking.carId.fullName %> 
+                            </h2>
+                            <div class="my-1">
+                              <span class="text-black-50">Model</span>
+                              <h5 class="text-primary"><%= booking.carId.model %> </h5>
+                            </div>             
+                          </div>
+              
+                          <div class="mb-3">
+                            <span class="text-black-50">Cost / day</span>
+                            <h5 class="text-primary"><%= booking.carId.rentPerDay %>  PKR / day</h5>
+                          </div>
+                          
+                          <div class="p-3" style="background-color: rgb(251 251 251)">
+                            <div class="row w-100">
+                              <div class="col-md-6">
+                                <div class="mb-2 d-flex flex-column">
+                                  <h6>Colour:</h6>
+                                  <span class="text-black-50"><%= booking.carId.colour %> </span>
+                                </div>
+                  
+                                <div class="mb-2 d-flex flex-column">
+                                  <h6>Seat Capacity:</h6>
+                                  <span class="text-black-50"><%= booking.carId.seatCapacity %> </span>
+                                </div>
+              
+                                <div class="mb-2 d-flex flex-column">
+                                  <h6>Driving Mode:</h6>
+                                  <span class="text-black-50"><%= booking.carId.drivingMode %> </span>
+                                </div>                  
+                              </div>
+              
+                              <div class="col-md-6">
+                                <div class="mb-2 d-flex flex-column">
+                                  <h6>Air Condition:</h6>
+                                  <span class="text-black-50"><%= booking.carId.airCondition %> </span>
+                                </div>
+                  
+                                <div class="mb-2 d-flex flex-column">
+                                  <h6>Engine Capacity:</h6>
+                                  <span class="text-black-50"><%= booking.carId.engineCapacity %> </span>
+                                </div>
+                                
+                                <div class="mb-2 d-flex flex-column">
+                                  <h6>Status:</h6>
+                                  <span class="text-primary"><%= booking.carId.status %> </span>
+                                </div>                  
+                              </div>
+                            </div>
+                            
+              
+                            <% if(booking.carId.status === 'Available'){ %> 
+                              <a href="#" class="carBooking btn btn-block btn-primary rounded-pill">Avaiable for booking</a>
+                              <% } else{ %> 
+                              <a href="#" class="carBooking btn btn-block btn-secondary" 
+                              disabled="true"
+                              style="cursor: not-allowed;">This car is reserved </a>
+                              <% } %>
+                        </div>
+                      </div>
+                    </div>
+                  </div> <!--  End of Row  -->
+                      
+                  <% if(booking.carId.internalImages.length>0) { %> 
+                    <div class="row mb-2 mt-5 w-100">       
+                      <% (booking.carId.internalImages).forEach((image,imageIndex) => { %>
+                        <div class="col-md-3 mt-3">            
+                          <a href="#"><img src="/<%= image %>"  width="99%" height="200" alt="Other images" class="thumbnail rounded "></a>            
+                      </div>
+                      <% }) %>
+                    </div>
+                  <% } %>                                                    
+              
+                  <div class="row w-100">
+                    <div class="col-md-12 col-lg-12 col-sm-12">
+                        <div class="d-flex flex-column mb-2 mt-5 px-5">
+                          <span class="text-black-50">About</span>
+                          <h3 class="text-primary"><%= booking.carId.fullName %> </h3>
+                        </div>
+                        <hr width="20%" size="1px" color="#009ADA">
+                    </div>
+                  </div>
+                  
+                  <% let descriptionLength  = ((booking.carId.details).length),
+                        halfOfLength       = (descriptionLength/2)+50,
+                        firstHalfDescription    = (booking.carId.details).slice(0,halfOfLength),
+                        secondHalfDescription   = (booking.carId.details).slice(halfOfLength,descriptionLength);
+                  %> 
+              
+                  <div class="row mt-5 w-100">
+                  
+                    <div class="col-md-6 px-5">
+                      <p class="aboutCarText">
+                        <%= firstHalfDescription %> 
+                      </p>
+                    </div>
+                    <div class="col-md-6 px-5">
+                        <p class="aboutCarText mb-2">
+                          <%= secondHalfDescription %> 
+                        </p>
+                        
+                        <% if(booking.carId.status === 'Available'){ %> 
+                          <a href="#" class="btn btn-block btn-primary rounded-pill">Available for booking</a>
+                          <% } else{ %> 
+                          <a href="#" class="btn btn-block btn-secondary rounded-pill" 
+                          disabled="true"
+                          style="cursor: not-allowed;">This car is reserved </a>
+                          <% } %>        
+                    </div>
+                  </div>                               
+                </div>
+                <!-- End of Customer Reservation car Details (byDefault hide)-->
+                <% } %>
+              <!-- ...............++++++++++++++++++++++++++.................. -->
+
+              
+              <!-- Reservation other details like bookingDate, cost etc. -->
+              <div class="row w-100 mt-5">
+                <div class="col-md-6">
+                  <h4>Reservation Date <span class="float-right">:</span></h4>
+                </div>
+                <div class="col-md-6">
+                  <h5><%= booking.bookingDate %> </h5>
+                </div>
+              </div>               
+            
+              <div class="row w-100 my-2">
+                <div class="col-md-6">
+                  <h4>Returning Date <span class="float-right">:</span></h4>
+                </div>
+                <div class="col-md-6">
+                  <h5><%= booking.returningDate %> </h5>
+                </div>
+              </div>                
+  
+              <div class="row w-100 mb-2">
+                <div class="col-md-6">
+                  <h4>Phone Number <span class="float-right">:</span></h4>
+                </div>
+                <div class="col-md-6">
+                  <h5><%= booking.phoneNumber %> </h5>
+                </div>
+              </div>
+  
+              <div class="row w-100 mb-1">
+                <div class="col-md-6">
+                  <h4>Total Rent <span class="float-right">:</span></h4>
+                </div>
+                <div class="col-md-6">
+                  <h5><%= booking.rent %> PKR </h5>
+                </div>
+              </div>          
+  
+              <hr>
+              <!-- End of Reservation other details like bookingDate, cost etc. -->
+              <!-- .......................................................... -->
+              </div>                            
+              <!-- End of showing reservation carName and other details -->
+              <!-- .......................................................... -->
+                            
+            <% }) %>
+            <!-- End of Customer Reservation Details, customer.myBookings.forEach()  -->
+            <% } %> 
+            <!-- End of Customer Reservation check (for No reservation)  -->
+
+
+            <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){%>
+            <div class="row mt-5 ml-md-3">
+              <div class="col-md-4">
+                <a href="#" class="btn btn-block btn-warning mb-1" 
+                onclick="showUpdateCustomerDiv('<%=index%>')">Modify Customer</a>
+              </div>
+              <div class="col-md-4">
+                <a href="#" class="btn btn-block btn-danger mb-1"
+                onclick="showDeleteCustomerDiv('<%=index%>')">Delete Customer</a>
+              </div>
+            </div>
+            <% }else{ %>
+              <div class="row mt-5 ml-md-3">
+                <div class="col-md-4">
+                  <a href="#" class="btn btn-block btn-warning mb-1">Modify Customer</a>
+                </div>
+                <div class="col-md-4">
+                  <a href="#" class="btn btn-block btn-danger mb-1">Delete Customer</a>
+                </div>
+              </div>
+
+              <div class="row w-100">
+                <div class="col-md-12">
+                  <small class="text-black-50">You Can Only View these</small>
+                </div>
+              </div>
+            <% } %>
+  
+          </div> <!-- End of Customer details div -->
+          <% }) %>
+        
+
+
+        <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){%>
+         <!-- Update Customer confirmation div -->
+         <% customers.forEach((customer,index)=>{ %>     
+          <div class="adminPanelModal mt-5 hide updateCustomerDiv<%=index%>">
+            
+            <div class="card">
+              <div class="card-header">
+                  <h3 class="fontSize-1rem">Want to modify <%= customer.fullName %></h3>
+              </div>
+              <div class="card-body">
+                <form action="/updateCustomer/withId/<%= customer._id %>" method="post">
+                  <div class="row w-100">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="cnic">CNIC NO</label>
+                        <input required type="text" pattern="\d{5}-\d{7}-\d{1}" name="cnic" class="form-control cnic" value="<%= customer.cnic %>">
+                        <small class="form-text cnicFormate">CNIC No format : xxxxx-xxxxxxx-x </small>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input required type="text" name="fullName" class="form-control" value="<%= customer.fullName %>">
+                      </div>
+                    </div>
+                  </div>               
+  
+                  <div class="row w-100">
+                    <div class="col-md-12">
+                      <% if (customer.gender == 'male') { %>
+                        <div class="form-group-inline">
+                          <label for="male">Male  </label>
+                          <input  type="radio" checked required id="male" value="male" name="gender"> &nbsp;&nbsp;&nbsp;
+                          <label for="male">Female   </label> 
+                          <input  type="radio" required id="female" value="female" name="gender">
+                        </div>
+                      <% } else { %>
+                        <div class="form-group-inline">
+                          <label for="male">Male  </label>
+                          <input  type="radio" required id="male" value="male" name="gender"> &nbsp;&nbsp;&nbsp;
+                          <label for="male">Female   </label> 
+                          <input  type="radio" checked required id="female" value="female" name="gender">
+                        </div>
+                      <% } %>
+                      
+                    </div>         
+                  </div>               
+  
+                  <div class="row mt-2">
+                    <div class="col-md-6 mb-1">
+                      <button type="submit" class="form-submit btn btn-primary btn-block mb-1">
+                       Update Profile
+                      </button>
+                    </div>
+                    <div class="col-md-6 mb-1">
+                      <button type="reset" class="btn btn-warning btn-block mb-1">
+                      CLEAR FORM
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        <% })%>  
+        <!-- End of Update customer Div-->
+        <% } %>
+        <!-- End of if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite') 
+            for update customer or customer modification-->
+
+        <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){ %>        
+        <!-- delete Customer confirmation div -->
+        <% customers.forEach((customer,index)=>{ %>     
+          <div class="adminPanelModal mt-5 hide deleteCustomerDiv<%=index%>">
+            <div class="card">
+              <div class="card-header">
+                  <h3>Kindly Confirm ! </h3>  
+              </div>
+              <div class="card-body">
+                <form action="/adminPanel/deleteCustomer/withId/<%=customer._id%>" method="get">
+                 <div class="row w-100">
+                   <div class="col-md-12">
+                    <h3 class="text-primary mb-3">Are you sure, want to delete <%=customer.fullName%></h3>
+  
+                    <hr size="12px" width="80%" color='brown' class="my-4">
+  
+                    <p>This process cannot be reversed, once you delete this Customer. It will no longer
+                      be able to act as this website customer. And He/She would not be able to perform any
+                      operation like booking car. 
+                      Click Yes if you want to continue with the delete process. or click No to back deletion process.
+                    </p>
+                   </div>
+                  </div>
+  
+                  <div class="row w-100 my-3">
+                    <div class="col-md-4">
+                      <a class="adminProfile btn btn-primary btn-block text-white mb-1">No !</a>
+                    </div>
+                    <div class="col-md-4">
+                     <p class="mx-auto text-primary" style="width: 12%;">---</p>
+                    </div>
+                    <div class="col-md-4">
+                      <button type="submit" class=" btn btn-danger btn-block mb-1">Yes !</button>
+                    </div>
+                  </div>  
+                </form>
+              </div>
+            </div> <!-- Card End (in logout div)-->
+          </div>
+        <% })%>
+         <!-- End of delete customer confirmation Div-->
+        <% } %>
+        <!-- End of if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite') -->
+
+          <!-- Car detail div -->
+          <% cars.forEach((car,index)=>{ %>
+            <div class="adminPanelModal hide carDetailsDiv<%=index%>" >  
+                <div class="row mb-3 w-100">
+                  <div class="col-md-4">
+                    <img src="/<%= car.displayImage %>" class="thumbnail carLargeImage<%= index %> detailCarLargeImage" alt="Car image" width="100%" height="70%">
+                  </div>
+          
+                  <div class="col-md-8">
+                    <div class="card p-2">
+                      <div class="d-flex flex-column mb-3">
+                        <h4 class="carName text-primary">
+                          <%= car.fullName %> 
+                        </h4>
+                        <div class="my-1">
+                          <span class="text-black-50">Model</span>
+                          <h5 class="text-primary"><%= car.model %> </h5>
+                        </div>             
+                      </div>
+          
+                      <div class="mb-3">
+                        <span class="text-black-50">Cost / day</span>
+                        <h5 class="text-primary"><%= car.rentPerDay %>  PKR / day</h5>
+                      </div>
+                      
+                      <div class="p-3" style="background-color: rgb(251 251 251)">
+                        <div class="row w-100">
+                          <div class="col-md-6">
+                            <div class="mb-2 d-flex flex-column">
+                              <h6>Colour:</h6>
+                              <span class="text-black-50"><%= car.colour %> </span>
+                            </div>
+              
+                            <div class="mb-2 d-flex flex-column">
+                              <h6>Seat Capacity:</h6>
+                              <span class="text-black-50"><%= car.seatCapacity %> </span>
+                            </div>
+          
+                            <div class="mb-2 d-flex flex-column">
+                              <h6>Driving Mode:</h6>
+                              <span class="text-black-50"><%= car.drivingMode %> </span>
+                            </div>                  
+                          </div>
+          
+                          <div class="col-md-6">
+                            <div class="mb-2 d-flex flex-column">
+                              <h6>Air Condition:</h6>
+                              <span class="text-black-50"><%= car.airCondition %> </span>
+                            </div>
+              
+                            <div class="mb-2 d-flex flex-column">
+                              <h6>Engine Capacity:</h6>
+                              <span class="text-black-50"><%= car.engineCapacity %> </span>
+                            </div>
+                            
+                            <div class="mb-2 d-flex flex-column">
+                              <h6>Status:</h6>
+                              <span class="text-primary"><%= car.status %> </span>
+                            </div>                  
+                          </div>
+                        </div>
+                        
+          
+                        <% if(car.status === 'Available'){ %> 
+                          <a href="#" class="carBooking btn btn-block btn-primary rounded-pill">Avaiable for booking</a>
+                          <% } else{ %> 
+                          <a href="#" class="carBooking btn btn-block btn-secondary" 
+                          disabled="true"
+                          style="cursor: not-allowed;">This car is reserved </a>
+                          <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div> <!--  End of Row  -->
+                  
+              <% if(car.internalImages.length>0) { %> 
+                <div class="row mb-2 mt-5 w-100">       
+                  <% (car.internalImages).forEach((image,imageIndex) => { %>
+                    <div class="col-md-3 mt-3">            
+                      <a href="#"><img src="/<%= image %>"  width="99%" height="200" alt="Other images" class="thumbnail rounded carSmallImage<%= index %><%= imageIndex %>"></a>            
+                  </div>
+                  <% }) %>
+                </div>
+                <% if (currentUser.role == 'admin' || currentUser.authority == 'readAndWrite') { %>                 
+                  <div class="row mb-2 mt-5 w-100">
+                    <div class="col-md-12">
+                      <span class="text-success">You Can Update Car internal Images.</span>                                                         
+                      <a href="#"
+                        class="ml-2"
+                        onclick="showUpdateCarInternalImagesDiv('<%=index%>')">
+                        Update Interior Images
+                      </a>
+                    </div>                                              
+                  </div>
+                  <!-- Update Car internal Images Div -->
+                  <div class="row w-100 mt-4 hide updateCarInternalImagesDiv<%= index %>">
+                      <div class="col-md-12 px-2">
+                      <div class="card">
+                          <div class="card-header">
+                          <h5>Car internal images update form</h5>
+                          </div>
+                          <div class="card-body">
+                          <form action="/adminPanel/update/carInternalImages/withId/<%= car.id %> "
+                              method="post"
+                              enctype="multipart/form-data">
+                              <div class="form-group">                      
+                              <input type="file" required name="internalImages" id="internalImages"
+                              accept="image/*" multiple class="form-control">
+                              <small class="form-text">Select maximum of 4 car Interior pictures</small>
+                              <button type="submit" class="btn btn-primary mt-4 mb-2">Update Images</button>
+                              </div>
+                          </form>
+                          </div>
+                      </div>
+                      </div>
+                  </div>
+                  <!-- Ends of Update Car internal Images Div -->
+                <% } %>
+              <% }else if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){%>      
+                <div class="row mb-2 mt-5 w-100">
+                  <div class="col-md-12">
+                    <span class="text-danger">This car has no interior Images, Want to </span>                                                         
+                    <a href="#"
+                      class="ml-2"
+                      onclick="showAddCarInternalImagesDiv('<%=index%>')" 
+                      >Add Internal Images
+                    </a>
+                  </div>                                              
+                </div>
+
+                <!-- Add Car internal Images Div -->
+                <div class="row w-100 mt-4 hide addCarInternalImagesDiv<%= index %>">
+                  <div class="col-md-12 px-2">
+                    <div class="card">
+                      <div class="card-header">
+                        <h5>Car internal images add form</h5>
+                      </div>
+                      <div class="card-body">
+                        <form action="/adminPanel/addInternalImages/toCar/withId/<%= car._id %>"
+                          method="post"
+                          enctype="multipart/form-data">
+                          <div class="form-group">                      
+                            <input type="file" required name="internalImages" id="internalImages"
+                            accept="image/*" multiple class="form-control">
+                            <small class="form-text">Select maximum of 4 car internal pictures</small>
+                            <button type="submit" class="btn btn-primary mt-4 mb-2">Add Images</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Ends of add Car internal Images Div -->
+              <% } else { %>
+                <div class="row mb-2 mt-5 w-100">
+                  <div class="col-md-12">
+                    <span class="text-danger">This car has no internal Images (!You can only view)</span>                                                                             
+                  </div>                                              
+                </div>
+              <% } %> 
+                
+          
+              <div class="row w-100">
+                <div class="col-md-12 col-lg-12 col-sm-12">
+                    <div class="d-flex flex-column mb-2 mt-5 px-5">
+                      <span class="text-black-50">About</span>
+                      <h6 class="text-primary"><%= car.fullName %> </h6>
+                    </div>
+                    <hr width="20%" size="1px" color="#009ADA">
+                </div>
+              </div>
+              
+              <% let descriptionLength  = ((car.details).length),
+                    halfOfLength       = (descriptionLength/2)+50,
+                    firstHalfDescription    = (car.details).slice(0,halfOfLength),
+                    secondHalfDescription   = (car.details).slice(halfOfLength,descriptionLength);
+              %> 
+          
+              <div class="row mt-5 w-100">
+              
+                <div class="col-md-6 px-5">
+                  <p class="aboutCarText">
+                    <%= firstHalfDescription %> 
+                  </p>
+                </div>
+                <div class="col-md-6 px-5">
+                    <p class="aboutCarText mb-2">
+                      <%= secondHalfDescription %> 
+                    </p>
+                    
+                    <% if(car.status === 'Available'){ %> 
+                      <a href="#" class="btn btn-block btn-primary rounded-pill">Available for booking</a>
+                      <% } else{ %> 
+                      <a href="#" class="btn btn-block btn-secondary rounded-pill" 
+                      disabled="true"
+                      style="cursor: not-allowed;">This car is reserved </a>
+                      <% } %>        
+                </div>
+              </div>  
+              
+              <!-- Comments / feedbacks -->
+              <div class="row w-100 mt-3">                
+                <div class="col-md-12">
+                <div class="p-3 mb-2 bg-light text-dark">          
+                  <a href="/vehicles/carDetails/carFeedback/withId/<%= car._id %>" type="button" style="float: right;" class="btn btn-md btn-success float-right">Add Feedback</a>          
+                  <br><br><br>
+                <% car.feedbacks.forEach((feedback)=>{ %>
+                  <div class="row mt-3">
+                    <div class="col-md-12">
+                      <strong>
+                        <h4 class="text-primary"><%= feedback.author.fullName %></h4>
+                      </strong>
+
+                      <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){%>
+                      <span style="float:right;">
+                        <a type="button"  class="btn btn-xs btn-warning mb-1" href="/vehicles/carDetails/carFeedback/modifyFeedback/withId/<%= car._id %>/<%= feedback._id %>">
+                            Modify
+                        </a>
+                        <a type="button"  class="btn btn-xs btn-danger mb-1" href="/vehicles/carDetails/carFeedback/deleteFeedback/withId/<%= car._id %>/<%= feedback._id %>  ">
+                          Delete
+                        </a>
+                      </span>
+                      <% } %>
+
+                      <h6>
+                        <%= feedback.text %>           
+                      </h6>
+                    </div>
+                  </div>                         
+                  <% }) %>      
+                </div> 
+                </div> <!-- Col-md-10 ends at feedback row-->
+              </div> <!-- Ends of feedback row-->
+              <!-- Ends of comments / feedbacks -->
+              
+              <!-- Car details Buttons -->
+
+              <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){%>
+                <div class="row mt-5">
+                  <div class="col-md-4">
+                    <a href="#" class="btn btn-block btn-primary mb-1" 
+                    onclick="showUpdateCarDiv('<%=index%>')">Modify</a>
+                  </div>
+      
+                  <!--  Car Show / Hide btn -->
+                  <% if(car.hide){ %>
+                    <div class="col-md-4">
+                      <a href="/adminPanel/carDetails/showCar/withId/<%= car._id %>" class="btn btn-block btn-warning mb-1">Show Car</a>
+                    </div>            
+                  <% }else{%>
+                    <div class="col-md-4">
+                      <a href="/adminPanel/carDetails/hideCar/withId/<%= car._id %>" class="btn btn-block btn-warning mb-1">Hide Car</a>
+                    </div>
+                  <% } %>
+                  <!--End of Car Show / Hide btn -->
+      
+                  <div class="col-md-4">
+                    <a href="#" class="btn btn-block btn-danger mb-1" 
+                    onclick="showDeleteCarDiv('<%=index%>')">Delete</a>
+                  </div>
+                </div>
+              <% } else{ %>
+                <div class="row mt-5 ml-md-3">
+                  <div class="col-md-4">
+                    <a href="#" class="btn btn-block btn-primary mb-1">Modify</a>
+                  </div>
+      
+                  <!-- Car Show / Hide btn -->
+                  <% if(car.hide){ %>
+                    <div class="col-md-4">
+                      <a href="#" class="btn btn-block btn-warning mb-1">Show Car</a>
+                    </div>            
+                  <% }else{%>
+                    <div class="col-md-3">
+                      <a href="#" class="btn btn-block btn-warning mb-1">Hide Car</a>
+                    </div>
+                  <% } %>
+                  <!--End of Car Show / Hide btn -->
+      
+                  <div class="col-md-3">
+                    <a href="#" class="btn btn-block btn-danger mb-1">Delete</a>
+                  </div>
+                </div>
+                <div class="row w-100">
+                  <div class="col-md-8 ml-2">
+                    <small class="text-black-50">You Can Only View these</small>
+                  </div>
+                </div>
+              <% } %>
+      
+
+              <!-- Ends of Car details buttons -->
+            </div> <!-- End of Car details div -->
+            <% }) %>
+            
+
+          <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){ %>
+            <!-- Car registration dIV (form) -->
+            <div class="adminPanelModal hide mt-3" id="carRegistrationDiv">                
+                <div class="card">
+                  <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                      <h3>Register a new Car</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <form action="/adminPanel/carRegistration" method="post" enctype = "multipart/form-data" >
+
+                      <div class="row w-100">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="name">Car Name:</label>
+                            <input required type="text" name="fullName" class="form-control" placeholder="Honda Civic">              
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row w-100">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="displayImage">Display Image:</label>
+                            <input type="file" id="displayImage" name="displayImage" accept="image/*" class="form-control"  
+                            oninvalid="this.setCustomValidity('Please select a CAR Image for display Image')" 
+                            onvalid="this.setCustomValidity('')">
+                            <small class="form-text">Select only one picture for display Image</small>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="model">Model:</label>
+                            <input required type="text" name="model" class="form-control" placeholder="2017 / 2017+">
+                          </div>
+                        </div>
+                      </div>
+
+                      
+                      <div class="row w-100">
+                        <div class="col-md-12">
+                          <lable class="my-1">Driving Mode:</lable>
+                          <div class="form-group-inline">
+                            <label for="auto">Auto  </label>
+                            <input  type="radio" required id="auto" value="Auto" name="drivingMode"> &nbsp;&nbsp;&nbsp;
+                            <label for="manual">Manual   </label> 
+                            <input  type="radio" required id="manual" value="Manual" name="drivingMode">
+                          </div>
+                        </div>         
+                      </div>
+
+                      <hr size="10%" width="60%" color="brown">
+
+                      <div class="row w-100">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="rentPerDay">Rent Per Day:</label>
+                            <input required type="text" name="rentPerDay" class="form-control" placeholder="4000 / 5000 ">              
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row w-100">
+                        <div class="col-md-12">
+                          <label class="my-1">Air Condition:</label>
+                          <div class="form-group-inline">
+                            <label for="yes">Yes  </label>
+                            <input  type="radio" required id="yes" value="Yes" name="airCondition"> &nbsp;&nbsp;&nbsp;
+                            <label for="no">No   </label> 
+                            <input  type="radio" required id="no" value="No" name="airCondition">
+                          </div>
+                        </div>         
+                      </div>
+
+                      <hr size="10%" width="90%" color="brown">
+
+                      <div class="row w-100">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="colour">Colour:</label>
+                            <input required type="text" name="colour" class="form-control" placeholder="Black / white">              
+                          </div>
+                        </div>
+                      </div>
+                    
+                      <div class="row w-100">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="engineCapacity">Engine Capacity:</label>
+                            <input required type="text" class="form-control" name="engineCapacity" placeholder="1800 cc">              
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="seatCapacity">Seat Capacity</label>
+                            <input required type="text" class="form-control" name="seatCapacity" placeholder="5 seater">              
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row w-100 my-1">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="carDetails">Specifications or Details</label>
+                            <textarea name="details" id="carDetails" class="form-control" rows="10"
+                            placeholder="Honda Civic is powered by a 1799 cc engine having 6500 RPM. Its dimensions in “mm” are 4656 X 1799 X 1433 (L X W X H). Its wheelbase is 2700 mm. The vehicle has an automatic transmission. It can carry five persons in it."></textarea>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row w-75 mt-2 mx-auto">
+                        <div class="col-md-12">
+                          <button type="submit" class="btn btn-primary btn-block rounded-pill my-1">REGISTER CAR</button>
+                        </div>          
+                      </div>
+                    </form>
+                  </div>    
+                </div>    <!-- End of Car registration card div-->
+            </div>
+            <!-- End of Car registration dIV-->
+            <% } %>
+            <!-- End of if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite') for carRegistration-->
+
+
+            <!-- Update Car details -->
+            <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){ %>
+              <% cars.forEach((car,index)=>{ %>
+              <div class="adminPanelModal hide mt-3 update<%= index %>CarDetails">                
+                  <div class="card">
+                    <div class="card-header">
+                      <div class="d-flex justify-content-between">
+                        <h3>Update <%= car.fullName %> Details</h3>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <form action="/adminPanel/updateCar/withId/<%= car._id %>" method="post" enctype = "multipart/form-data" >
+  
+                        <div class="row w-100">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label for="name">Car Name:</label>
+                              <input required type="text" name="fullName" class="form-control" value="<%= car.fullName %>">              
+                            </div>
+                          </div>
+                        </div>
+  
+                        <div class="row w-100">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="displayImage">Display Image:</label>
+                              <input type="file" id="displayImage" name="displayImage" accept="image/*" class="form-control"  
+                              oninvalid="this.setCustomValidity('Please select a CAR Image for display Image')" 
+                              onvalid="this.setCustomValidity('')">
+                              <small class="form-text">Select only one picture for display Image</small>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="model">Model:</label>
+                              <input required type="text" name="model" class="form-control" value="<%= car.model %>">
+                            </div>
+                          </div>
+                        </div>
+  
+                        
+                        <div class="row w-100">
+                          <div class="col-md-12">
+                            <lable class="my-1">Driving Mode:</lable>
+                            <% if (car.drivingMode == 'Auto') { %>
+                              <div class="form-group-inline">
+                                <label for="auto">Auto  </label>
+                                <input  type="radio" checked id="auto" value="Auto" name="drivingMode"> &nbsp;&nbsp;&nbsp;
+                                <label for="manual">Manual   </label> 
+                                <input  type="radio" id="manual" value="Manual" name="drivingMode">
+                              </div>
+                            <% }else{ %>
+                              <div class="form-group-inline">
+                                <label for="auto">Auto  </label>
+                                <input  type="radio" id="auto" value="Auto" name="drivingMode"> &nbsp;&nbsp;&nbsp;
+                                <label for="manual">Manual   </label> 
+                                <input  type="radio" checked id="manual" value="Manual" name="drivingMode">
+                              </div>
+                            <% } %>
+                          </div>         
+                        </div>
+  
+                        <hr size="10%" width="60%" color="brown">
+  
+                        <div class="row w-100">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label for="rentPerDay">Rent Per Day:</label>
+                              <input required type="text" name="rentPerDay" class="form-control" value="<%= car.rentPerDay %>">              
+                            </div>
+                          </div>
+                        </div>
+  
+                        <div class="row w-100">
+                          <div class="col-md-12">
+                            <label class="my-1">Air Condition:</label>
+                            <% if (car.airCondition == 'Yes') { %>
+                              <div class="form-group-inline">
+                                <label for="yes">Yes  </label>
+                                <input  type="radio" checked id="yes" value="Yes" name="airCondition"> &nbsp;&nbsp;&nbsp;
+                                <label for="no">No   </label> 
+                                <input  type="radio"  id="no" value="No" name="airCondition">
+                              </div>                            
+                            <% } else { %>
+                              <div class="form-group-inline">
+                                <label for="yes">Yes  </label>
+                                <input  type="radio"  id="yes" value="Yes" name="airCondition"> &nbsp;&nbsp;&nbsp;
+                                <label for="no">No   </label> 
+                                <input  type="radio" checked id="no" value="No" name="airCondition">
+                              </div>
+                            <% } %>
+                          </div>         
+                        </div>
+  
+                        <hr size="10%" width="90%" color="brown">
+  
+                        <div class="row w-100">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label for="colour">Colour:</label>
+                              <input required type="text" name="colour" class="form-control" value="<%= car.colour %>">              
+                            </div>
+                          </div>
+                        </div>
+                      
+                        <div class="row w-100">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="engineCapacity">Engine Capacity:</label>
+                              <input required type="text" class="form-control" name="engineCapacity" value="<%= car.engineCapacity%>">              
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="seatCapacity">Seat Capacity</label>
+                              <input required type="text" class="form-control" name="seatCapacity" value="<%= car.seatCapacity %>">              
+                            </div>
+                          </div>
+                        </div>
+  
+                        <div class="row w-100 my-1">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label for="carDetails">Specifications or Details</label>
+                              <textarea name="details" id="carDetails" class="form-control" rows="10"><%= car.details %></textarea>
+                            </div>
+                          </div>
+                        </div>
+  
+                        <div class="row w-75 mt-2 mx-auto">
+                          <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary btn-block rounded-pill">Update Details</button>
+                          </div>          
+                        </div>
+                      </form>
+                    </div>    
+                  </div>    <!-- End of update car card div-->
+              </div>
+              <%})%>
+              <!-- End of cars.forEach() -->
+              <% } %>
+              <!-- End of if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite') for car updation-->  
+            <!-- Ends of update car details -->
+
+
+            <!-- show Delete Car div -->
+            <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){ %>        
+              <!-- delete Car confirmation div -->
+              <% cars.forEach((car,index)=>{ %>     
+                <div class="adminPanelModal mt-5 hide delete<%=index%>CarDiv">
+                  <div class="card">
+                    <div class="card-header">
+                        <h3>Kindly Confirm ! </h3>  
+                    </div>
+                    <div class="card-body">
+                      <form action="/adminPanel/deleteCar/withId/<%=car._id%>" method="get">
+                       <div class="row w-100">
+                         <div class="col-md-12">
+                          <h3 class="text-primary mb-3">Are you sure, want to delete <%=car.fullName%></h3>
+        
+                          <hr size="12px" width="80%" color='brown' class="my-4">
+        
+                          <p>This process cannot be reversed, once you delete this Carr. It will no longer
+                            be available in car databases and customers will not be able to view or reserve this car.
+                            Although its previous records will be present only for view ..
+                            Click Yes if you want to continue with the delete process. or click No to back..
+                          </p>
+                         </div>
+                        </div>
+        
+                        <div class="row w-100 my-3">
+                          <div class="col-md-4">
+                            <a class="adminProfile btn btn-primary btn-block text-white mb-1">No !</a>
+                          </div>
+                          <div class="col-md-4">
+                           <p class="mx-auto text-primary" style="width: 12%;">---</p>
+                          </div>
+                          <div class="col-md-4">
+                            <button type="submit" class=" btn btn-danger btn-block mb-1">Yes !</button>
+                          </div>
+                        </div>  
+                      </form>
+                    </div>
+                  </div> <!-- Card End (in car Delete div)-->
+                </div>
+              <% })%>
+               <!-- End of delete car confirmation Div-->
+              <% } %>
+              <!-- End of if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite') 
+                  for delete car div-->
+      
+            <!-- Ends of showing delete car div -->
+
+            <!-- Not verified Reservations Details -->            
+              <% notVerifiedReservations.forEach((reservation,index)=>{ %>
+                <div class="adminPanelModal hide notVerifiedReservationsDiv<%=index%>">
+                  <div class="row my-1">
+                    <div class="col-md-12 ">
+                      <h3 class="text-primary fontSize-1rem d-inline"><strong><%= index+1 %> Reservation Status : 
+                      </strong>
+                      </h3>
+        
+                      <% if (!reservation.isPhoneNumberVerified) { %>        
+                        <button class="btn btn-success">PhoneNumber Not verified</button> <br>                                
+                      <% } else if (!reservation.isConfirmed) { %>
+                        <button class="btn btn-success d-block">Waiting For confirmation ...</button>                        
+                      <% } else if (reservation.isReturned) { %>                
+                        <button class="btn btn-success">Vehicle Returned</button>
+                      <% } else if (reservation.isConfirmed) { %>                  
+                          <button class="btn btn-success">Active Now</button>                  
+                      <% }%>            
+                                                  
+                    </div>
+                  </div>
+
+                  <hr size="10%" width="80%" color="brown" class="mb-4">
+        
+                  <!-- By default only show carName -->
+                  <div class="row w-100 carName<%= index %> mb-3">
+                    <div class="col-md-6">
+                      <h3 class="text-primary carName fontSize-1rem d-inline"><%= reservation.carName %> </h3>
+                    </div>
+                    <div class="col-md-6">
+                      <h3 class="text-primary fontSize-1rem d-inline"><%= reservation.referenceNo %> </h3>
+                    </div>
+                  </div>
+
+                  <hr width="20%" size="1px" color="#009ADA" class="position-absolute">
+                  <!-- End of showing only carName -->        
+        
+                    <div class="row w-100 mt-5">
+                      <div class="col-md-6">
+                        <h4>Reservation Date <span class="float-right">:</span></h4>
+                      </div>
+                      <div class="col-md-6">
+                        <h5><%= reservation.bookingDate %> </h5>
+                      </div>
+                    </div>               
+                  
+                    <div class="row w-100 my-2">
+                      <div class="col-md-6">
+                        <h4>Returning Date <span class="float-right">:</span></h4>
+                      </div>
+                      <div class="col-md-6">
+                        <h5><%= reservation.returningDate %> </h5>
+                      </div>
+                    </div>                
+        
+                    <div class="row w-100 mb-2">
+                      <div class="col-md-6">
+                        <h4>Phone Number <span class="float-right">:</span></h4>
+                      </div>
+                      <div class="col-md-6">
+                        <h5><%= reservation.phoneNumber %> </h5>
+                      </div>
+                    </div>
+        
+                    <div class="row w-100 mb-1">
+                      <div class="col-md-6">
+                        <h4>Total Rent <span class="float-right">:</span></h4>
+                      </div>
+                      <div class="col-md-6">
+                        <h5><%= reservation.rent %> PKR </h5>
+                      </div>
+                    </div>          
+        
+                    <hr>
+                </div> <!-- End of bookings details (1,2,3 ...)-->
+              <% }) %>  
+            <!-- End of not verified Reservations Details -->
+
+
+            <!-- Not Confirmed Reservations Details -->            
+              <% notConfirmedReservations.forEach((reservation,index)=>{ %>
+                  <div class="adminPanelModal hide notConfirmedReservationsDiv<%=index%>">
+                    <div class="row my-1">
+                      <div class="col-md-12 ">
+                        <h3 class="text-primary fontSize-1rem d-inline"><strong><%= index+1 %> Reservation Status : 
+                        </strong>
+                        </h3>
+
+                        <% if (!reservation.isPhoneNumberVerified) { %>        
+                          <button class="btn btn-success">PhoneNumber Not verified</button> <br>                                
+                        <% } else if (!reservation.isConfirmed) { %>
+                          <button class="btn btn-success">Waiting For confirmation ...</button>
+                        <% } else if (reservation.isReturned) { %>                
+                          <button class="btn btn-success">Vehicle Returned</button>
+                        <% } else if (reservation.isConfirmed) { %>                  
+                            <button class="btn btn-success">Active Now</button>                  
+                        <% }%>            
+                                                    
+                      </div>
+                    </div>
+
+                    
+
+                    <hr size="10%" width="80%" color="brown" class="mb-4">
+
+                    <!-- By default only show carName -->
+                    <div class="row w-100 carName<%= index %> mb-3">
+                      <div class="col-md-6">
+                        <h3 class="text-primary carName fontSize-1rem d-inline"><%= reservation.carName %> </h3>
+                      </div>
+                      <div class="col-md-6">
+                        <h3 class="text-primary fontSize-1rem d-inline"><%= reservation.referenceNo %> </h3>
+                      </div>
+                    </div>
+
+                    <hr width="20%" size="1px" color="#009ADA" class="position-absolute">
+                    <!-- End of showing only carName -->        
+
+                      <div class="row w-100 mt-5">
+                        <div class="col-md-6">
+                          <h4>Reservation Date <span class="float-right">:</span></h4>
+                        </div>
+                        <div class="col-md-6">
+                          <h5><%= reservation.bookingDate %> </h5>
+                        </div>
+                      </div>               
+                    
+                      <div class="row w-100 my-2">
+                        <div class="col-md-6">
+                          <h4>Returning Date <span class="float-right">:</span></h4>
+                        </div>
+                        <div class="col-md-6">
+                          <h5><%= reservation.returningDate %> </h5>
+                        </div>
+                      </div>                
+
+                      <div class="row w-100 mb-2">
+                        <div class="col-md-6">
+                          <h4>Phone Number <span class="float-right">:</span></h4>
+                        </div>
+                        <div class="col-md-6">
+                          <h5><%= reservation.phoneNumber %> </h5>
+                        </div>
+                      </div>
+
+                      <div class="row w-100 mb-1">
+                        <div class="col-md-6">
+                          <h4>Total Rent <span class="float-right">:</span></h4>
+                        </div>
+                        <div class="col-md-6">
+                          <h5><%= reservation.rent %> PKR </h5>
+                        </div>
+                      </div>
+                      
+                      <div class="row mt-4">
+                        <div class="col-md-6">
+                          <button onclick="showCustomerPaidDiv('<%=index%>')" class="btn btn-primary btn-block mb-2">Found Correct</button>
+                        </div>
+                        <div class="col-md-6">
+                          <button onclick="showUpdateReservationDiv('<%=index%>')" class="btn btn-danger btn-block">Not Correct</butt>
+                        </div>
+                      </div>   
+
+                      <hr>
+
+                      <!-- If reservation details found CORRECT then -->
+                        <div class="row w-100 mt-3 hide reservationConfirmationModal customerPaidDiv<%= index %>">
+                          <div class="col-md-6">
+                            <h4 class="text-primary">Customer Paid <span class="float-right mr-4">: </span></h4>
+                          </div>
+                          <div class="col-md-6">
+                            <form action="/adminPanel/confirm/a/reservation/<%= reservation._id %>" method="post">
+                              <div class="form-group">
+                                <label for="none">NONE (0 PKR)</label>
+                                <input type="radio" required onclick="checkForOtherAmountsDiv('<%=index%>',this)" name="customerPaidAmounts" class="float-right mr-4" id="none" value="0">
+                              </div>
+  
+                              <div class="form-group">
+                                <label for="full">FULL (<%= reservation.rent %> PKR)</label>
+                                <input type="radio" required onclick="checkForOtherAmountsDiv('<%=index%>',this)" name="customerPaidAmounts" class="float-right mr-4" id="full" value="<%= reservation.rent %>">
+                              </div>
+  
+                              <div class="form-group">
+                                <label for="half">HALF (<%= reservation.rent/2 %> PKR)</label>
+                                <input type="radio" required onclick="checkForOtherAmountsDiv('<%=index%>',this)" name="customerPaidAmounts" class="float-right mr-4" id="half" value="<%= reservation.rent/2 %>">
+                              </div>
+  
+                              <div class="form-group">
+                                <a href="#" onclick="checkForOtherAmountsDiv('<%=index%>',this)">CUSTOME (other amounts)</a>                              
+                              </div>
+  
+                              <div class="row mt-2 hide otherAmounts<%= index %>Div">                                                    
+                                <input type="text" name="customerCustomePaidAmounts" placeholder="Customer Amount" id="customerCustomePaidAmounts" class="form-control">                          
+                              </div>                                                            
+
+                              <div class="row mt-2 w-100">
+                                <div class="col-md-10 ml-5">
+                                  <div class="form-group">
+                                    <label for="InvoicePDFOption"><small>By default a PDF of the invoice will be generated. Uncheck if you don't want</small></label>
+                                    <input type="checkbox" checked="true" name="InvoicePDFOption" id="InvoicePDFOption" style="width: 2rem; height: 1.5rem;">                          
+                                  </div>
+                                </div>                              
+                              </div>
+
+                              <div class="row w-100">
+                              <div class="col-md-6"></div>
+                              <div class="col-md-6">
+                                <button type="submit" class="mt-2 btn btn-primary btn-block">Confirm Reservation</button>
+                              </div>
+                            </div>                                                        
+                          </form>
+                        </div>
+
+                      <!-- Ends of If reservation details found CORRECT then -->
+
+                      
+                      <!-- If reservation details found NOT CORRECT then -->
+                        <div class="row w-100 mt-2 hide reservationConfirmationModal update<%= index %>ReservationDiv">
+                          <div class="col-md-12">
+
+                            <div class="card">
+                              <div class="card-header">
+                                  <h3>NOT CORRECT? Kindly CORRECT.</h3>
+                              </div>
+                              <div class="card-body">
+                                <form action="/adminPanel/update/notCorrect/reservation/details/<%= reservation._id %>" method="post">
+                                    
+                                  <div class="row w-100">          
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="reservationDate">Reservation Date</label>
+                                        <input required type="date" id="reservationDate" name="bookingDate" class="form-control" value="<%= reservation.bookingDate %>">             
+                                        <small class="text-black-50">mm/dd/yy</small>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label for="returningDate">Returning Date</label>
+                                        <input required type="text" id="returningDate" name="returningDate" class="form-control" value="<%= reservation.returningDate %>">
+                                        <small class="text-black-50">dd/mm/yy</small>
+                                      </div>
+                                    </div>
+                                  </div>
+                          
+                                  <div class="row w-100">
+                                    <div class="col-md-12">
+                                      <div class="form-group">
+                                        <label for="rent">Rent</label>
+                                        <input required type="text" name="rent" class="form-control" value="<%= reservation.rent %>">              
+                                      </div>
+                                    </div>
+                                  </div>    
+                          
+                                  <div class="row mt-2">
+                                    <div class="col-md-6">
+                                      <button type="submit" class="btn btn-success btn-block mb-1">Update Details</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <a onclick="showCustomerPaidDiv('<%=index%>')" class="btn btn-primary btn-block text-white mb-1">Details Was Correct</a>
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
+                            </div> <!-- End of card-->
+                          </div>
+                        
+                        </div>
+                      <!-- Ends of If reservation details found NOT CORRECT then -->
+                  </div>
+                <% }) %>  
+              <!-- End of not Confirmed Reservations Details -->
+
+              <!-- Active Reservations Details -->            
+              <% activeReservations.forEach((reservation,index)=>{ %>
+                <div class="adminPanelModal hide activeReservationsDiv<%=index%>">
+                  <div class="row my-1">
+                    <div class="col-md-12 ">
+                      <h3 class="text-primary fontSize-1rem d-inline">
+                        <strong><%= index+1 %> Reservation Status :                     
+                          <% if (!reservation.isPhoneNumberVerified) { %>        
+                            PhoneNumber Not verified
+                          <% } else if (!reservation.isConfirmed) { %>
+                            Waiting For confirmation ...
+                          <% } else if (reservation.isReturned) { %>                
+                            Vehicle Returned
+                          <% } else if (reservation.isConfirmed) { %>                  
+                            Active Now                                
+                          <%}%>            
+                        </strong>
+                      </h3>
+                                                  
+                    </div>
+                  </div>
+
+                  <hr size="10%" width="80%" color="brown" class="mb-4">
+
+                  <!-- By default only show carName -->
+                  <div class="row w-100 carName<%= index %> mb-3">
+                    <div class="col-md-6">
+                      <h3 class="text-primary carName fontSize-1rem d-inline"><%= reservation.carName %> </h3>
+                    </div>
+                    <div class="col-md-6">
+                      <h3 class="text-primary fontSize-1rem d-inline"><%= reservation.referenceNo %> </h3>
+                    </div>
+                  </div>
+
+                  <hr width="20%" size="1px" color="#009ADA" class="position-absolute">
+                  <!-- End of showing only carName -->        
+
+                    <div class="row w-100 mt-5">
+                      <div class="col-md-6">
+                        <h4>Reservation Date <span class="float-right">:</span></h4>
+                      </div>
+                      <div class="col-md-6">
+                        <h5><%= reservation.bookingDate %> </h5>
+                      </div>
+                    </div>               
+                  
+                    <div class="row w-100 my-2">
+                      <div class="col-md-6">
+                        <h4>Returning Date <span class="float-right">:</span></h4>
+                      </div>
+                      <div class="col-md-6">
+                        <h5><%= reservation.returningDate %> </h5>
+                      </div>
+                    </div>                
+
+                    <div class="row w-100 mb-2">
+                      <div class="col-md-6">
+                        <h4>Phone Number <span class="float-right">:</span></h4>
+                      </div>
+                      <div class="col-md-6">
+                        <h5><%= reservation.phoneNumber %> </h5>
+                      </div>
+                    </div>
+
+                    <div class="row w-100 mb-1">
+                      <div class="col-md-6">
+                        <h4>Total Rent <span class="float-right">:</span></h4>
+                      </div>
+                      <div class="col-md-6">
+                        <h5><%= reservation.rent %> PKR </h5>
+                      </div>
+                    </div>          
+
+                    <hr>
+
+                    <% if (!reservation.isReturned) { %>
+                      <% if ((reservation.rent - reservation.paidAmounts) != 0) { %>
+                        <div class="row w-100">
+                          <div class="col-md-8">
+                            <p>Still Customer haven't paid <strong><span class="text-primary">
+                              (<%= (reservation.rent - reservation.paidAmounts) %>) PKR</span></strong> for this reservation.</p>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <p class="d-inline">Did Customer Paid ? </p>
+                              <input type="checkbox" onchange="showReturnReservationCarDiv('<%=index%>',this)" name="confirmingPaidAmounts" id="confirmingPaidAmounts" style="width: 2rem; height: 1.5rem;">
+                            </div>
+                          </div>
+                        </div>
+                      <% }else{ %>
+                        <div class="row w-100">
+                          <div class="col-md-8">
+                            <p>Does car returned? Make it available for others.</p>
+                          </div>
+                          <div class="col-md-4">
+                            <a href="#" onclick="showReturnedCarReservationDetails('<%= index %>')" class="btn btn-primary">Make Car Available</a>
+                          </div>
+                        </div>
+                      <% } %>
+                      <div class="row w-100 hide return<%= index %>ReservationCarDiv">
+                        <div class="col-md-8">
+                          <p>Does car returned? Make it available for others.</p>
+                        </div>
+                        <div class="col-md-4">
+                          <a href="#" onclick="showReturnedCarReservationDetails('<%= index %>')" class="btn btn-primary">Make Car Available</a>
+                        </div>
+                      </div>
+                    <% } %>
+
+                    <!-- Confirm returned car details before making them available for others -->
+                    <div class="row w-100 mt-2 hide return<%= index %>ReservationDetailsDiv">
+                      <div class="col-md-12">
+                          <div class="card">
+                              <div class="card-header">
+                                  <h3>Kindly, carefully look at the following details</h3>
+                              </div>
+                              <div class="card-body">
+                              <form action="/adminPanel/update/notCorrect/Returned/car/details/<%= reservation.carId %>/<%= reservation._id %>" method="post">
+                                  
+                                  <div class="row w-100">          
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                      <label for="reservationDate">Reservation Date</label>
+                                      <input required type="date" oninput="unableUpdateBtn()" id="reservationDate" name="bookingDate" class="form-control" value="<%= reservation.bookingDate %>">             
+                                      <small class="text-black-50">mm/dd/yy</small>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                      <label for="paidAmounts">Paid Amounts (till now date)</label>
+                                      <input required type="text" oninput="unableUpdateBtn()" id="paidAmounts" name="paidAmounts" class="form-control" value="<%= reservation.paidAmounts %>">                    
+                                      </div>
+                                  </div>
+                                  </div>
+                          
+                                  <div class="row w-100">
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                      <label for="rent">Rent till, (<%= reservation.returningDate %>)</label>
+                                      <input required type="text" oninput="unableUpdateBtn()" name="rent" class="form-control" value="<%= reservation.rent %>">              
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                      <label for="returningDate">Returning Date</label>
+                                      <input required type="text" oninput="unableUpdateBtn()" id="returningDate" name="returningDate" class="form-control" value="<%= reservation.returningDate %>">
+                                      <small class="text-black-50">dd/mm/yy</small>
+                                      </div>
+                                  </div>
+                                  </div>    
+                          
+                                  <div class="row mt-2">
+                                  <div class="col-md-6">
+                                      <button type="submit" id="updateReturnCarDetailsBtn" class="btn btn-warning btn-block mb-1"
+                                      disabled="true" style="cursor: not-allowed;">Update Details</button>
+                                      <small>Update reservation details and make car availble for others.</small>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <a href="/vehicles/makeAvailable/withId/<%= reservation.carId %>/<%= reservation._id %>" 
+                                        class="btn btn-primary btn-block text-white mb-1">Details found Correct</a>
+                                      <small>All the details found correct so make car available for others.</small>
+                                  </div>
+                                  </div>
+                              </form>
+                              </div>
+                          </div> <!-- End of card-->
+                      </div>
+                    </div>
+                    <!-- Ends of confirming returned car details-->
+
+                </div> 
+              <% }) %>  
+            <!-- End of Active Reservations Details -->
+
+            <!-- All Reservations Details -->            
+              <% allReservations.forEach((reservation,index)=>{ %>
+                <div class="adminPanelModal hide allReservationsDiv<%=index%>">
+                  <div class="row my-1">
+                    <div class="col-md-12 ">
+                      <h3 class="text-primary fontSize-1rem d-inline"><strong><%= index+1 %> Reservation Status : 
+                      </strong>
+                      </h3>
+
+                      <% if (!reservation.isPhoneNumberVerified) { %>        
+                        <button class="btn btn-success">PhoneNumber Not verified</button> <br>                                
+                      <% } else if (!reservation.isConfirmed) { %>
+                        <button class="btn btn-success">Waiting For confirmation ...</button>                        
+                      <% } else if (reservation.isReturned) { %>                
+                        <button class="btn btn-success">Vehicle Returned</button>
+                      <% } else if (reservation.isConfirmed) { %>                  
+                          <button class="btn btn-success">Active Now</button>                  
+                      <% }%>            
+                                                  
+                    </div>
+                  </div>
+
+                  <hr size="10%" width="80%" color="brown" class="mb-4">
+
+                  <!-- By default only show carName not all carDetails-->
+                  <div class="row w-100 carName<%= index %> mb-3">
+                    <div class="col-md-6">
+                      <h3 class="text-primary carName fontSize-1rem d-inline"><%= reservation.carName %> </h3>
+                    </div>
+                    <div class="col-md-6">
+                      <h3 class="text-primary fontSize-1rem d-inline"><%= reservation.referenceNo %> </h3>
+                    </div>
+                  </div>
+
+                  <hr width="20%" size="1px" color="#009ADA" class="position-absolute">
+                  <!-- End of showing only carName -->        
+
+                    <div class="row w-100 mt-5">
+                      <div class="col-md-6">
+                        <h4>Reservation Date <span class="float-right">:</span></h4>
+                      </div>
+                      <div class="col-md-6">
+                        <h5><%= reservation.bookingDate %> </h5>
+                      </div>
+                    </div>               
+                  
+                    <div class="row w-100 my-2">
+                      <div class="col-md-6">
+                        <h4>Returning Date <span class="float-right">:</span></h4>
+                      </div>
+                      <div class="col-md-6">
+                        <h5><%= reservation.returningDate %> </h5>
+                      </div>
+                    </div>                
+
+                    <div class="row w-100 mb-2">
+                      <div class="col-md-6">
+                        <h4>Phone Number <span class="float-right">:</span></h4>
+                      </div>
+                      <div class="col-md-6">
+                        <h5><%= reservation.phoneNumber %> </h5>
+                      </div>
+                    </div>
+
+                    <div class="row w-100 mb-1">
+                      <div class="col-md-6">
+                        <h4>Total Rent <span class="float-right">:</span></h4>
+                      </div>
+                      <div class="col-md-6">
+                        <h5><%= reservation.rent %> PKR </h5>
+                      </div>
+                    </div>          
+
+                    <hr>
+                </div> 
+              <% }) %>  
+              <!-- End of All Reservations Details -->
+
+      <!-- Shop detail div -->
+      <% shop.forEach((shop,index)=>{ %>
+        <div class="adminPanelModal show" id="shopDetailsDiv" >
+
+          <div class="row my-2 ml-md-3">
+            <div class="col-md-8 ">
+              <h3 class="text-primary"><strong>Your Bargain Details</strong></h3>
+            </div>
+          </div> 
+
+          <div class="row ml-5">
+            <div class="col-md-4 lineHeight4">
+              <strong>Shop Name:</strong>
+            </div>
+            <div class="col-md-6 lineHeight4">
+              <%=shop.fullName%>
+            </div>
+          </div>
+          
+          <hr size="12px" width="80%" color='#007BFF'>
+
+          <div class="row ml-3">
+            <div class="col-md-4 lineHeight4">
+              <a href="#"><strong onclick="toggleShopOwnerDetails()">Owner Details</strong></a>
+              <small class="text-black-50">Click to toggle</small>
+            </div>
+          </div>
+          
+
+            <!-- Shop Owner Details -->
+            <div class="row hide" id="shopOwnerDetails">
+            
+              <div class="col-md-12">                                  
+                <div class="row ml-5">
+                  <div class="col-md-4 lineHeight4">
+                    <strong>Owner Name:</strong>
+                  </div>
+                  <div class="col-md-6 lineHeight4">
+                  <%= admin.fullName %> 
+                  </div>
+                </div>
+                
+                <div class="row ml-5">
+                  <div class="col-md-4 lineHeight4">
+                    <strong>CNIC:</strong>
+                  </div>
+                  <div class="col-md-6 lineHeight4">
+                    <%= admin.cnic  %>
+                  </div>
+                </div>
+
+                <div class="row ml-5">
+                  <div class="col-md-4 lineHeight4">
+                    <strong>Contact No:</strong>
+                  </div>
+                  <div class="col-md-6 lineHeight4">
+                    <%= admin.phoneNumber  %>
+                  </div>
+                </div>
+
+                <div class="row ml-5">
+                  <div class="col-md-4 lineHeight4">
+                    <strong>Email Address:</strong>
+                  </div>
+                  <div class="col-md-6 lineHeight4">
+                    <%= admin.email %>
+                  </div>
+                </div>
+              </div> 
+              <hr size="12px" width="80%" color='#007BFF'>
+            </div>         
+            <!-- End of shop owner details -->          
+
+          <div class="row ml-5">
+            <div class="col-md-4 lineHeight4">
+              <strong>Shop Address:</strong>
+            </div>
+            <div class="col-md-6 lineHeight4">
+              <%= shop.address %>
+            </div>
+          </div>
+
+        <hr size="12px" width="80%" color='#007BFF'>
+
+          <!-- Shop contact Details -->
+          <div class="row ml-3 w-100" id="shopContactDetails">            
+              <div class="col-md-4 text-primary">
+                <strong>Contact Details :</strong> 
+              </div>
+          </div>
+            <div class="row ml-5">
+              <div class="col-md-4 lineHeight4">
+                <strong>Email Address:</strong>
+              </div>
+              <div class="col-md-6 lineHeight4">
+                <a href="mailto:"><%= shop.email %></a>                
+              </div>
+            </div>  
+            <div class="row ml-5">
+              <div class="col-md-4 lineHeight4">
+                <strong>Phone Number:</strong>
+              </div>
+              <div class="col-md-6 lineHeight4">
+                <%= shop.phoneNumber %>
+              </div>            
+            </div>
+          <!-- End of shop contact Details -->
+
+          <div class="row mt-5 ml-md-3">
+            <div class="col-md-12">
+              <a onclick="showUpdateShopDiv('<%= index %>')" 
+                href="#" 
+                class="btn btn-block btn-primary">
+                Update Shop details
+              </a>
+            </div>           
+          </div>
+
+        </div> <!-- End of Shop details div -->
+        <% }) %>
+
+        <!-- Update Shop Details Div -->
+        <% shop.forEach((shop,index) => { %>
+         <div class="adminPanelModal hide update<%= index %>ShopDetails " id="updateShopDiv">
+          <div class="card">
+            <div class="card-header">
+              <h3>Update (Shop/Bargain) details</h3>
+            </div>
+            <div class="card-body">
+              <form action="/adminPanel/updateShopDetails/withId/<%= shop._id %>" method="post">
+                <div class="row w-100">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="name">Shop/Bargain Name</label>
+                      <input required type="text" name="fullName" class="form-control"
+                      value="<%= shop.fullName %>">              
+                    </div>
+                  </div>          
+                </div>
+                
+                <div class="row w-100">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="email">Email Address</label>
+                      <input required type="email" name="email" class="form-control email"
+                      value="<%= shop.email %>">
+                      <small class="emailError"></small>            
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="phoneNumber">Contact No</label>
+                      <input required type="tel" name="phoneNumber" class="phoneNumber form-control"
+                      value="<%= shop.phoneNumber %>">
+                      <small class="phoneNumberError"></small>              
+                    </div>
+                  </div>
+                </div>
+        
+                <div class="row w-100">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="shopAdress">Shop Adress</label>
+                      <input required type="text" name="address" class="form-control"
+                      value="<%= shop.address %>">              
+                    </div>
+                  </div>
+                </div>        
+               
+                <div class="row  mt-2">
+                  <div class="col-md-6">
+                    <button type="submit" class="form-submit btn btn-primary btn-block mb-1">
+                     Update Details
+                    </button>
+                  </div>
+                  <div class="col-md-6">
+                    <button type="reset" class="btn btn-secondary btn-block mb-1">CLEAR FORM</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+         </div>
+        <% }) %>
+        <!-- Ends of Update Shop Details Div -->
+
+
+        <!-- Update Profile -->
+        <div class="adminPanelModal mt-5 hide" id="updateProfileDiv">
+          
+            <div class="card">
+              <div class="card-header">
+                  <h3><%= currentUser.fullName %>, It's easy to update your Profile</h3>
+              </div>
+              <div class="card-body">
+                <form action="/updateAdminProfile/<%= currentUser._id%>" method="post">
+                  <div class="row w-100">
+                    
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="cnic">CNIC NO</label>
+                        <input required type="text" pattern="\d{5}-\d{7}-\d{1}" name="cnic" class="form-control cnic" value="<%= currentUser.cnic %>">
+                        <small class="form-text">CNIC No format : xxxxx-xxxxxxx-x </small>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input required type="text" name="fullName" class="form-control" value="<%= currentUser.fullName %>">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row w-100">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input required type="email" name="email" class="email form-control" value="<%= currentUser.email %>">
+                        <small class="emailError form-text"></small>
+                      </div>
+                    </div>
+                  </div>
+ 
+                  <div class="row w-100">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="phoneNumber">Contact No</label>
+                        <input required type="tel" name="phoneNumber" class="phoneNumber form-control" value="<%= currentUser.phoneNumber %>">
+                        <small class="phoneNumberError form-text"></small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row mt-2">
+                    <div class="col-md-6">
+                      <button type="submit" class="form-submit btn btn-primary btn-block mb-1"
+                       disabled="true" style="cursor: not-allowed;">Update Profile</button>
+                    </div>
+                    <div class="col-md-6">
+                      <button type="reset" class="btn btn-warning btn-block mb-1">CLEAR FORM</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+        </div> <!-- End of Update Profile div-->
+
+
+        <!-- Change Password -->
+        <div class="adminPanelModal mt-5 hide" id="changePasswordDiv">
+
+          <div class="card">
+            <div class="card-header">
+              <div class="d-flex justify-content-between">
+                <h3>Change Password Portal</h3>
+              </div>
+            </div>
+            <div class="card-body">
+              <form action="/adminPanel/changeAdminOrDbUserPassword/withId/<%= currentUser._id %>" method="post">
+                <div class="row w-100">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="oldPassword">Old Password</label>
+                      <input required type="password" class="form-control" name="oldPassword">                      
+                    </div>
+                  </div>
+                </div>
+               <div class="row w-100">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="password">New Password</label>
+                      <input required type="password" class="form-control password" name="password">
+                      <span onclick="togglePassVisibility()" class="btn btn-secondary btn-sm mt-2 toggleBtn">Show</span>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="repeatPassword">Confirm New Password</label>
+                      <input required type="password" class="form-control repeatPassword">
+                      <small class="repeatPasswordError form-text"></small>
+                    </div>
+                  </div>
+                </div>
+        
+                  <div class="col-md-12">
+                    <button type="submit" class="form-submit btn btn-primary btn-block"
+                    disabled='true' style="cursor: not-allowed;">Change Password</button>
+                  </div>
+              </form>
+            </div>
+          </div> <!-- Card End (in Change Password div)-->
+
+        </div> <!-- End of Change Password div -->
+
+
+        <!-- LogOut -->
+        <div class="adminPanelModal mt-5 hide" id="logoutDiv">
+          <div class="card">
+            <div class="card-header">
+                <h3>Please Confirm ! </h3>  
+            </div>
+            <div class="card-body">
+              <form action="/logout" method="get">
+               <div class="row w-100">
+                 <div class="col-md-12">
+                  <h3 class="text-primary">Sure! , Want to log Out ?</h3>
+                 </div>
+                </div>
+
+                <div class="row w-100 my-3">
+                  <div class="col-md-4">
+                    <a class="adminProfile btn btn-primary btn-block text-white mb-1">No !</a>
+                  </div>
+                  <div class="col-md-4">
+                    <p class="mx-auto text-primary" style="width: 12%;">---</p>
+                  </div>
+                  <div class="col-md-4">
+                    <button type="submit" class=" btn btn-danger btn-block mb-1">Yes !</button>
+                  </div>
+                </div>  
+              </form>
+            </div>
+          </div> <!-- Card End (in logout div)-->
+        </div> <!-- End of Logout Div-->
+
+        <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){%>
+        <!-- Add db User Registration -->
+        <div class="adminPanelModal mt-4 hide" id="addDbUserDiv">
+          
+            <div class="card">
+              <div class="card-header">
+                <h3>Add Database User !</h3>
+              </div>
+              <div class="card-body">
+                <form action="/adminPanel/dbUserRegistration" method="post">
+                  <div class="row w-100">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="cnic">CNIC NO</label>
+                        <input required type="text" pattern="\d{5}-\d{7}-\d{1}" name="cnic" class="form-control cnic">
+                        <small class="form-text">CNIC No format : xxxxx-xxxxxxx-x </small>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input required type="text" name="fullName" class="form-control" placeholder="Muhammad Bilal">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row w-100">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input required type="email" name="email" class="email form-control" placeholder="abc@gmail.com">
+                        <small class="emailError form-text"></small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row w-100">
+                    <div class="col-md-12">
+                      <div class="form-group-inline">
+                        <label for="readOnly"> Read Only</label>
+                        <input  type="radio" required id="readOnly" value="readOnly" name="authority"> &nbsp;&nbsp;&nbsp;
+                        <label for="readAndWrite">Read and Write   </label> 
+                        <input  type="radio" required id="readAndWrite" value="readAndWrite" name="authority">
+                      </div>
+                    </div>         
+                  </div>
+                
+                  <div class="row w-100">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="password">Password</label>
+                        <input required type="password" class="form-control password" name="password">
+                        <span onclick="togglePassVisibility()" class="btn btn-secondary btn-sm mt-2 toggleBtn">Show</span>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="repeatPassword">Confirm Password</label>
+                        <input required type="password" class="form-control repeatPassword">
+                        <small class="repeatPasswordError form-text"></small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row w-100">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="phoneNumber">Contact No</label>
+                        <input required type="tel" name="phoneNumber" class="phoneNumber form-control">
+                        <small class="phoneNumberError form-text"></small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row  mt-2">
+                    <div class="col-md-6">
+                      <button type="submit" class="form-submit btn btn-primary btn-block mb-1"
+                      style="cursor: not-allowed;" disabled="true">ADD USER</button>
+                    </div>
+                    <div class="col-md-6">
+                      <button type="reset" class="btn btn-warning btn-block mb-1">CLEAR FORM</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+        </div> <!-- End of add db User registration div -->
+        <% } %>
+        <!-- End of if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite') for addDbUser-->
+
+        <!-- Db user details div -->
+        <% dbUsers.forEach((dbUser,index)=>{%>
+        <div class="adminPanelModal dbUserDetailsDiv<%=index%> hide">
+          <div class="row my-2 ml-md-3">
+            <div class="col-md-8 ">
+              <h3 class="text-primary"><strong><%=dbUser.fullName%> Profile</strong></h3>
+            </div>
+          </div>           
+          <div class="row ml-5">
+            <div class="col-md-4 lineHeight4">
+              <strong>Name:</strong>
+            </div>
+            <div class="col-md-6 lineHeight4">
+             <%=dbUser.fullName%>
+            </div>
+          </div>
+          
+          <div class="row ml-5">
+            <div class="col-md-4 lineHeight4">
+              <strong>CNIC:</strong>
+            </div>
+            <div class="col-md-6 lineHeight4">
+              <%=dbUser.cnic  %>
+            </div>
+          </div>
+        
+        <hr size="12px" width="80%" color='#007BFF'>
+        <!-- dbUser Contact details -->
+          <div class="row ml-3 w-100">
+            <div class="col-md-12 text-primary">
+              Contact Details
+            </div>
+          </div>
+
+          <div class="row ml-5">
+            <div class="col-md-4 lineHeight4">
+              <strong>Phone No#</strong>
+            </div>
+            <div class="col-md-6 lineHeight4">
+              <%=dbUser.phoneNumber  %>
+            </div>
+          </div>
+  
+          <div class="row ml-5">
+            <div class="col-md-4 lineHeight4">
+              <strong>Email Address:</strong>
+            </div>
+            <div class="col-md-6 lineHeight4">
+              <a href="mailto:"><%=dbUser.email%></a>              
+            </div>
+          </div>
+        <!-- End of dbUser Contact details -->
+        <hr size="12px" width="80%" color='#007BFF'>
+
+        <div class="row ml-5">
+          <div class="col-md-4 lineHeight4">
+            <strong>Authority :</strong>
+          </div>
+          <div class="col-md-6 lineHeight4">
+            <%=dbUser.authority%>
+          </div>
+        </div>
+        
+        <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){%>
+          <div class="row mt-5 ml-md-3">
+            <div class="col-md-3">
+              <a href="#" class="btn btn-block btn-primary mb-1" 
+              onclick="dbUserModifyDiv('<%=index%>')">Modify</a>
+            </div>
+
+            <!-- DbUser Disable / Unable btn -->
+            <% if(dbUser.disable){ %>
+              <div class="col-md-3">
+                <a href="/enableDbUser/<%=dbUser._id%>" class="btn btn-block btn-warning mb-1">Unable</a>
+              </div>            
+            <% }else{%>
+              <div class="col-md-3">
+                <a href="/disableDbUser/<%=dbUser._id%>" class="btn btn-block btn-warning mb-1">Disable</a>
+              </div>
+            <% } %>
+            <!--End of DbUser Disable / Unable btn -->
+
+            <div class="col-md-3">
+              <a href="#" class="btn btn-block btn-danger mb-1" 
+              onclick="showDeleteDbUserDiv('<%=index%>')">Delete</a>
+            </div>
+          </div>
+        <% } else{ %>
+          <div class="row mt-5 ml-md-3">
+            <div class="col-md-3">
+              <a href="#" class="btn btn-block btn-primary mb-1">Modify</a>
+            </div>
+
+            <!-- DbUser Disable / Unable btn -->
+            <% if(dbUser.disable){ %>
+              <div class="col-md-3">
+                <a href="#" class="btn btn-block btn-warning mb-1">Unable</a>
+              </div>            
+            <% }else{%>
+              <div class="col-md-3">
+                <a href="#" class="btn btn-block btn-warning mb-1">Disable</a>
+              </div>
+            <% } %>
+            <!--End of DbUser Disable / Unable btn -->
+
+            <div class="col-md-3">
+              <a href="#" class="btn btn-block btn-danger mb-1">Delete</a>
+            </div>
+          </div>
+          <div class="row w-100">
+            <div class="col-md-12">
+              <small class="text-black-50">You Can Only View these</small>
+            </div>
+          </div>
+        <% } %>
+          
+        </div> <!-- End of db user detials div -->
+        <%})%> <!--End of dbUser.forEach-->
+
+
+        <% if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite'){ %>
+        <!-- dbUser modification div -->
+        <% dbUsers.forEach((dbUser,index)=>{ %>     
+          <div class="adminPanelModal mt-5 hide dbUserModifyDiv<%=index%>">
+            <div class="card">
+              <div class="card-header">
+                <h3>Modify <%= dbUser.fullName %> details </h3>
+              </div>
+              <div class="card-body">
+                <form action="/adminPanel/modifyDbUser/WithId/<%= dbUser._id %>" method="post">
+                  <div class="row w-100">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="cnic">CNIC NO#</label>
+                        <input required type="text" pattern="\d{5}-\d{7}-\d{1}" name="cnic" class="form-control cnic" value="<%= dbUser.cnic %>" >
+                        <small class="form-text">CNIC No format : xxxxx-xxxxxxx-x </small>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input required type="text" name="fullName" class="form-control" value="<%= dbUser.fullName %>">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row w-100">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input required type="email" name="email" class="email form-control" value="<%= dbUser.email %>">
+                        <small class="emailError form-text"></small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <% if (dbUser.authority=='readOnly') { %>
+                    <div class="row w-100">
+                      <div class="col-md-12">
+                        <div class="form-group-inline">
+                          <label for="readOnly"> Read Only</label>
+                          <input  type="radio" required id="readOnly" checked value="readOnly" name="authority"> &nbsp;&nbsp;&nbsp;
+                          <label for="readAndWrite">Read and Write   </label> 
+                          <input  type="radio" required id="readAndWrite" value="readAndWrite" name="authority">
+                        </div>
+                      </div>         
+                    </div> 
+                  <% }  else { %>
+                    <div class="row w-100">
+                      <div class="col-md-12">
+                        <div class="form-group-inline">
+                          <label for="readOnly"> Read Only</label>
+                          <input  type="radio" required id="readOnly" value="readOnly" name="authority"> &nbsp;&nbsp;&nbsp;
+                          <label for="readAndWrite">Read and Write   </label> 
+                          <input  type="radio" required id="readAndWrite" checked value="readAndWrite" name="authority">
+                        </div>
+                      </div>         
+                    </div> 
+                  <% } %>
+     
+                  <div class="row w-100">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="phoneNumber">Phone No</label>
+                        <input required type="tel" name="phoneNumber" class="phoneNumber form-control" value="<%= dbUser.phoneNumber %>">
+                        <small class="phoneNumberError form-text"></small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row  mt-2">
+                    <div class="col-md-6">
+                      <button type="submit" class="form-submit btn btn-warning btn-block mb-1">Modify</button>
+                    </div>
+                    <div class="col-md-6">
+                      <button type="reset" class="btn btn-danger btn-block mb-1">CLEAR FORM</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div> <!-- End of dbUser modification Div-->
+        <% })%>
+
+
+        <!-- delete dbUser confirmation div -->
+        <% dbUsers.forEach((dbUser,index)=>{ %>     
+        <div class="adminPanelModal mt-5 hide deleteDbUserDiv<%=index%>">
+          <div class="card">
+            <div class="card-header">
+                <h3>Kindly Confirm ! </h3>  
+            </div>
+            <div class="card-body">
+              <form action="/deleteDbUser/<%=dbUser._id%>" method="get">
+               <div class="row w-100">
+                 <div class="col-md-12">
+                  <h3 class="text-primary mb-3">Are you sure, want to delete <%=dbUser.fullName%></h3>
+
+                  <hr size="12px" width="80%" color='brown' class="my-4">
+
+                  <p>This process cannot be reversed, once you delete this user. It will no longer
+                    be able to act as a Database user. And He/She would not be able to perform any
+                    operation to the database. 
+                    Click Yes if still you want to delete. or click No to go back...
+                  </p>
+                 </div>
+                </div>
+
+                <div class="row w-100 my-3">
+                  <div class="col-md-4">
+                    <a class="adminProfile btn btn-primary btn-block text-white mb-1">No !</a>
+                  </div>
+                  <div class="col-md-4">
+                   <p class="mx-auto text-primary" style="width: 12%;">---</p>
+                  </div>
+                  <div class="col-md-4">
+                    <button type="submit" class=" btn btn-danger btn-block mb-1">Yes !</button>
+                  </div>
+                </div>  
+              </form>
+            </div>
+          </div> <!-- Card End (in logout div)-->
+        </div> 
+      <% })%>
+      <!-- End of delete dbUser confirmation Div-->
+      <% } %> 
+      <!-- End of if(currentUser.role == 'admin' || currentUser.authority == 'readAndWrite') for 
+        dbUser Modification and dbUser Deletion Div-->
+
+      </div> <!-- End of col-md-9  (Details) -->
+  </div> <!-- End of 2nd row after (dashboard text) -->
+</div>
+
+<script>
+  const
+      adminProfileDiv     = document.getElementById('adminProfileDiv'),
+      updateProfileDiv    = document.getElementById('updateProfileDiv'),
+      carRegistrationDiv  = document.getElementById('carRegistrationDiv'),
+      changePasswordDiv   = document.getElementById('changePasswordDiv'),
+      logoutDiv           = document.getElementById('logoutDiv'),
+      addDbUserDiv        = document.getElementById('addDbUserDiv');      
+
+  // Showing Customer Profile ...
+  document.querySelectorAll('.adminProfile')
+  .forEach(btn=>{
+    btn.addEventListener('click',()=>{
+    resetColor();
+    btn.style.color = '#F55858'; // Chnage color into red (look active)
+    hideAllModals();
+
+    adminProfileDiv.classList.remove('hide');
+    adminProfileDiv.classList.add('show');
+
+  })
+  })
+  
+  //Showing Update Profile Div
+  document.querySelectorAll('.updateProfile')
+  .forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      resetColor();
+      document.getElementById('updateProfile')
+    .style.color='#F55858'; // changePassword tab (in menus) color will be red (look active)
+
+      hideAllModals();
+
+      updateProfileDiv.classList.remove('hide');
+      updateProfileDiv.classList.add('show');
+    })
+  })
+
+  //Showing Change Password Div (Form)
+  document.querySelectorAll('.changePassword')
+  .forEach(btn=>{
+    btn.addEventListener('click',(event)=>{
+    resetColor();
+    document.getElementById('changePassword')
+    .style.color='#F55858';  // updateProfile tab (in menus) color will be red (look active)
+
+    hideAllModals();
+    changePasswordDiv.classList.remove('hide');
+    changePasswordDiv.classList.add('show');
+  })
+  })
+  
+
+  // Logout Promt (confirming to LogOut)
+  const logoutBtn = document.getElementById('logout');
+  logoutBtn.addEventListener('click',()=>{
+    resetColor();
+    logoutBtn.style.color = '#F55858'; // Chnage color into red (look active)
+
+    hideAllModals();
+
+    logoutDiv.classList.remove('hide');
+    logoutDiv.classList.add('show');
+  })
+
+  //Show add DB User Registration Div
+  const addDbUserBtn = document.getElementById('addDbUserBtn');
+  if(addDbUserBtn){
+    addDbUserBtn.addEventListener('click',()=>{
+    resetColor();
+    addDbUserBtn.style.color ='#F55858';
+
+    hideAllModals();
+    addDbUserDiv.classList.remove('hide');
+    addDbUserDiv.classList.add('show');
+  })
+  }
+ 
+
+  // Reset color into (text-primary)
+  function resetColor(){
+    document.querySelectorAll('.menu')
+    .forEach(menu=>{
+      menu.style.color = '#007BFF' ;
+    })    
+  }
+
+  //Hide all the modals
+  function hideAllModals(){
+    document.querySelectorAll('.adminPanelModal')
+    .forEach(div=>{
+      div.classList.remove('show');
+      div.classList.add('hide');
+    }) 
+  }
+
+
+  //Load Customers visibility ()
+  function loadCustomersVisibility(){
+     document.querySelectorAll('.loadCustomers').forEach(li=>{
+       if(li.classList.contains('hide')){
+        li.classList.remove('hide');
+        li.classList.add('show');
+       }
+       else{
+        li.classList.remove('show');
+        li.classList.add('hide');
+       }  
+     })
+ }
+
+ // toggle Customer Search Bar .
+ const customersSearchBar = document.querySelector('#customersSearchBar'),
+      customersSearchHint= document.querySelector('#customersSearchHint');
+  
+ function toggleCustomersSearchBar(){    
+       if(customersSearchBar.classList.contains('hide')){
+        customersSearchBar.classList.remove('hide');
+        customersSearchBar.classList.add('show');
+        if(customersSearchHint){
+          customersSearchHint.classList.remove('hide');
+          customersSearchHint.classList.add('show');
+        }       
+       }
+       else{
+        customersSearchBar.classList.remove('show');
+        customersSearchBar.classList.add('hide');
+        if(customersSearchHint){
+          customersSearchHint.classList.remove('show');
+          customersSearchHint.classList.add('hide');
+        }        
+       }     
+  }
+  
+// Search customers by name (functionality)
+  customersSearchBar.addEventListener('keyup',()=>{
+    let searchBarValue = (customersSearchBar.value).toLocaleLowerCase();
+
+    document.querySelectorAll('.customerNameElement').forEach(customer=>{      
+      customer.classList.add('hide');
+
+      if(((customer.textContent).toLocaleLowerCase()).includes(searchBarValue)){
+        customer.classList.remove('hide');
+        customer.classList.add('show');
+      }else{        
+        customer.classList.remove('show');
+        customer.classList.add('hide');  
+      }
+    })
+  })
+
+
+ //Load Cars
+ function loadCarsVisibility(){
+     document.querySelectorAll('.loadCars').forEach(li=>{
+       if(li.classList.contains('hide')){
+        li.classList.remove('hide');
+        li.classList.add('show');
+       }
+       else{
+        li.classList.remove('show');
+        li.classList.add('hide');
+       }  
+     })
+ }
+ 
+ // toggle Cars Search Bar .
+ const carsSearchBar = document.querySelector('#carsSearchBar'),
+       carSearchHint= document.querySelector('#carSearchHint');
+
+ function toggleCarsSearchBar(){
+   
+       if(carsSearchBar.classList.contains('hide')){
+        carsSearchBar.classList.remove('hide');
+        carsSearchBar.classList.add('show');
+        if(carSearchHint){
+          carSearchHint.classList.remove('hide');
+          carSearchHint.classList.add('show');
+        }        
+       }
+       else{
+        carsSearchBar.classList.remove('show');
+        carsSearchBar.classList.add('hide');
+        if(carSearchHint){
+          carSearchHint.classList.remove('show');
+          carSearchHint.classList.add('hide');
+        }        
+       }     
+  }
+  
+  // SEarch car by name functionality
+  carsSearchBar.addEventListener('keyup',()=>{
+    let searchBarValue = (carsSearchBar.value).toLowerCase();
+
+    document.querySelectorAll('.carNameElement').forEach(car=>{          
+
+      if(((car.textContent).toLocaleLowerCase()).includes(searchBarValue)){
+        car.classList.remove('hide');
+        car.classList.add('show');
+      }else{        
+        car.classList.remove('show');
+        car.classList.add('hide');  
+      }
+    })
+  })
+
+//Showing Customer Details
+function showCustomerDetails(index){
+  resetColor();
+  customerNameElement = document.querySelectorAll('.customerNameElement');
+  customerNameElement[index].style.color = '#F55858';
+  
+  hideAllModals();      
+  let customerDetailsDiv = document.querySelectorAll(`.customerDetailsDiv${index}`);
+    
+  customerDetailsDiv.forEach(div=>{
+    div.classList.remove('hide');
+    div.classList.add('show');
+  })
+}
+
+// Toggle Customer Reservations/booking details
+function toggleCustomerReservations(index,element){
+      //first Show Only reservation carName and other details 
+      document.querySelectorAll(`.customer${index}ReservationCarName`)
+      .forEach(div=>{
+        if(div.classList.contains('hide')){
+          div.classList.remove('hide');
+          div.classList.add('show');      
+        }else{
+          div.classList.remove('show');
+          div.classList.add('hide');
+        }
+      })
+
+      //Second Show reservation check div (if any customer have no reservation)
+      document.querySelectorAll(`.customer${index}ReservationCheck`)      
+      .forEach(div=>{
+        if(div.classList.contains('hide')){
+          div.classList.remove('hide');
+          div.classList.add('show');      
+        }else{
+          div.classList.remove('show');
+          div.classList.add('hide');
+        }
+      })
+
+      //Now Change the element text
+      if(element.textContent == 'Hide Details'){
+          element.textContent = 'Show Details';
+      }else{
+          element.textContent = 'Hide Details'
+      }
+      
+}
+
+// Toggle Customer Reservations each Car details
+function toggleCustomerReservationCarDetails(index,bookingIndex,element){      
+      document.querySelectorAll(`.customer${index}Reservation${bookingIndex}CarDetails`)
+      .forEach(div=>{
+        if(div.classList.contains('hide')){
+          div.classList.remove('hide');
+          div.classList.add('show');      
+        }else{
+          div.classList.remove('show');
+          div.classList.add('hide');
+        }
+      })
+    
+      //Now Change the element text
+      if(element.textContent == 'Hide Car Details'){
+          element.textContent = "Let's Explore";
+      }else{
+          element.textContent = 'Hide Car Details'
+      }
+}
+
+//showing Update Customer Div 
+function showUpdateCustomerDiv(index){
+  hideAllModals();
+
+  let updateCustomerDiv = document.querySelectorAll(`.updateCustomerDiv${index}`);
+  updateCustomerDiv.forEach(div=>{
+    div.classList.remove('hide');
+    div.classList.add('show');
+  })
+}
+
+//showing Delete Customer Div 
+function showDeleteCustomerDiv(index){
+  hideAllModals();
+
+  let deleteCustomerDiv = document.querySelectorAll(`.deleteCustomerDiv${index}`);
+  deleteCustomerDiv.forEach(div=>{
+    div.classList.remove('hide');
+    div.classList.add('show');
+  })
+}
+
+// ________________________________________________________________________________\\
+// toggle Not Verified reservations, Search Bar .
+const notVerifiedReservationsSearchBar = document.querySelector('#notVerifiedReservationsSearchBar');
+
+ function toggleNotVerifiedReservationsSearchBar(){
+        notVerifiedReservationsSearchBar.classList.toggle('hide');            
+}
+
+ // Search (notVerifiedReservations) by CustomerName or Ref No, functionality..
+ if(notVerifiedReservationsSearchBar){
+  notVerifiedReservationsSearchBar.addEventListener('keyup',()=>{
+      let searchBarValue = (notVerifiedReservationsSearchBar.value).toLowerCase();
+
+      document.querySelectorAll('.notVerifiedReservationRefNo').forEach(reservation=>{          
+
+        if(((reservation.textContent).toLocaleLowerCase()).includes(searchBarValue)){
+          reservation.classList.remove('hide');
+          reservation.classList.add('show');
+        }else{        
+          reservation.classList.remove('show');
+          reservation.classList.add('hide');  
+        }
+      })
+    })
+  }
+
+// Showing not verified reservation details div
+function showNotVerifiedReservationDetails(index){
+  resetColor();
+  reservationNameElement = document.querySelectorAll('.notVerifiedReservationRefNo');
+  reservationNameElement[index].style.color = '#F55858';
+  
+  hideAllModals();      
+  let reservationDetailsDiv = document.querySelectorAll(`.notVerifiedReservationsDiv${index}`);
+    
+  reservationDetailsDiv.forEach(div=>{
+    div.classList.remove('hide');
+    div.classList.add('show');
+  })
+}
+// ________________________________________________________________________________\\
+
+
+// ________________________________________________________________________________\\
+// toggle Not Confirmed reservations, Search Bar .
+const notConfirmedReservationsSearchBar = document.querySelector('#notConfirmedReservationsSearchBar');      
+
+ function toggleNotConfirmedReservationsSearchBar(){
+        notConfirmedReservationsSearchBar.classList.toggle('hide');            
+}
+
+// Search (notConfirmedReservations) by CustomerName or Ref No, functionality..
+if(notConfirmedReservationsSearchBar){
+  notConfirmedReservationsSearchBar.addEventListener('keyup',()=>{
+      let searchBarValue = (notConfirmedReservationsSearchBar.value).toLowerCase();
+
+      document.querySelectorAll('.notConfirmedReservationRefNo').forEach(reservation=>{          
+
+        if(((reservation.textContent).toLocaleLowerCase()).includes(searchBarValue)){
+          reservation.classList.remove('hide');
+          reservation.classList.add('show');
+        }else{        
+          reservation.classList.remove('show');
+          reservation.classList.add('hide');  
+        }
+      })
+    })
+  }
+
+
+// Showing Not Confirmed reservation details div
+function showNotConfirmedReservationDetails(index){
+  resetColor();
+  reservationNameElement = document.querySelectorAll('.notConfirmedReservationRefNo');
+  reservationNameElement[index].style.color = '#F55858';
+  
+  hideAllModals();      
+  let reservationDetailsDiv = document.querySelectorAll(`.notConfirmedReservationsDiv${index}`);
+    
+  reservationDetailsDiv.forEach(div=>{
+    div.classList.remove('hide');
+    div.classList.add('show');
+  })
+}
+
+// ----- Confirmation Process 
+
+// Lets first define a function that will hide all div related to reservation confirmation
+function hideReservationConfirmationDiv(){
+  document.querySelectorAll('.reservationConfirmationModal')
+  .forEach(div=>{
+    div.classList.remove('show');
+    div.classList.add('hide');
+  })
+}
+
+// showing showCustomerPaidDiv
+function showCustomerPaidDiv(index){
+
+  hideReservationConfirmationDiv();
+
+  let confirmationDiv = document.querySelectorAll(`.customerPaidDiv${index}`);    
+  confirmationDiv[0].classList.toggle('hide');
+}
+
+//showing customer other amounts div
+function checkForOtherAmountsDiv(index,element){
+  let otherAmountDiv = document.querySelectorAll(`.otherAmounts${index}Div`);
+
+    if(element.checked){
+      otherAmountDiv[0].classList.add('hide');
+    }else{
+      otherAmountDiv[0].classList.remove('hide');
+      // Make the input (customer amounts) as required
+      document.getElementById('customerCustomePaidAmounts')
+      .required = true ;
+
+      document.getElementsByName('customerPaidAmounts')
+
+      // Now unchecked all the radio (because customeAmount is selected)
+        .forEach(radio => {
+          radio.required = false ;
+            if (radio.checked) {
+                radio.checked = false
+            }
+        })
+    }
+}
+
+// Showing update reservation details div
+function showUpdateReservationDiv(index){ 
+  hideReservationConfirmationDiv();
+
+  let updationDiv = document.querySelectorAll(`.update${index}ReservationDiv`);    
+    updationDiv[0].classList.toggle('hide'); 
+}
+
+// ----- Ends of confirmation process
+// ________________________________________________________________________________\\
+
+
+
+// ________________________________________________________________________________\\
+// toggle Active reservations, Search Bar .
+const activeReservationsSearchBar = document.querySelector('#activeReservationsSearchBar');      
+
+ function toggleActiveReservationsSearchBar(){
+    activeReservationsSearchBar.classList.toggle('hide');            
+}
+
+// Search (Active Reservation) by CustomerName or Ref No, functionality..
+if(activeReservationsSearchBar){
+  activeReservationsSearchBar.addEventListener('keyup',()=>{
+      let searchBarValue = (activeReservationsSearchBar.value).toLowerCase();
+
+      document.querySelectorAll('.activeReservationRefNo').forEach(reservation=>{          
+
+        if(((reservation.textContent).toLocaleLowerCase()).includes(searchBarValue)){
+          reservation.classList.remove('hide');
+          reservation.classList.add('show');
+        }else{        
+          reservation.classList.remove('show');
+          reservation.classList.add('hide');  
+        }
+      })
+    })
+  }
+
+
+// Showing Active reservation details div
+function showActiveReservationDetails(index){
+  resetColor();
+  reservationNameElement = document.querySelectorAll('.activeReservationRefNo');
+  reservationNameElement[index].style.color = '#F55858';
+  
+  hideAllModals();      
+  let reservationDetailsDiv = document.querySelectorAll(`.activeReservationsDiv${index}`);
+    
+  reservationDetailsDiv.forEach(div=>{
+    div.classList.remove('hide');
+    div.classList.add('show');
+  })
+}
+
+// Showing returned reservation div (if customer have paid all the reservation amounts)
+function showReturnReservationCarDiv(index,element){
+  let div = document.querySelectorAll(`.return${index}ReservationCarDiv`)[0];
+  if(element.checked){
+    div.classList.remove('hide');
+  }else{
+    div.classList.add('hide');
+  }
+}
+
+// show confirming returned car reservation details
+function showReturnedCarReservationDetails(index){  
+  let div = document.querySelectorAll(`.return${index}ReservationDetailsDiv`)[0];  
+    div.classList.toggle('hide');
+}
+
+// Unable Update reservation details of the returned car
+function unableUpdateBtn(){
+  // returned car reservation details updation btn functioning.
+  btn = document.getElementById('updateReturnCarDetailsBtn');
+  btn.style.cursor = 'pointer';
+  btn.disabled = false ;
+}
+
+// ________________________________________________________________________________\\
+
+
+// ________________________________________________________________________________\\
+// toggle All reservations, Search Bar .
+const allReservationsSearchBar = document.querySelector('#allReservationsSearchBar');      
+
+ function toggleAllReservationsSearchBar(){
+    allReservationsSearchBar.classList.toggle('hide');            
+}
+
+// Search (All Reservation) by CustomerName or Ref No, functionality..
+if(allReservationsSearchBar){
+    allReservationsSearchBar.addEventListener('keyup',()=>{
+      let searchBarValue = (allReservationsSearchBar.value).toLowerCase();
+
+      document.querySelectorAll('.allReservationsRefNo').forEach(reservation=>{          
+
+        if(((reservation.textContent).toLocaleLowerCase()).includes(searchBarValue)){
+          reservation.classList.remove('hide');
+          reservation.classList.add('show');
+        }else{        
+          reservation.classList.remove('show');
+          reservation.classList.add('hide');  
+        }
+      })
+    })
+  }
+
+//Load More Reservations
+function loadAllReservationsVisibility(){
+     document.querySelectorAll('.loadAllReservations').forEach(li=>{
+       li.classList.toggle('hide');
+ })
+} 
+
+
+// Showing Not Confirmed reservation details div
+function showAllReservationDetails(index){
+  resetColor();
+  reservationNameElement = document.querySelectorAll('.allReservationsRefNo');
+  reservationNameElement[index].style.color = '#F55858';
+  
+  hideAllModals();      
+  let reservationDetailsDiv = document.querySelectorAll(`.allReservationsDiv${index}`);
+    
+  reservationDetailsDiv.forEach(div=>{
+    div.classList.remove('hide');
+    div.classList.add('show');
+  })
+}
+// ________________________________________________________________________________\\
+
+
+//Showing Car registration Div
+document.getElementById('carRegistrationBtn')
+.addEventListener('click',()=>{
+  resetColor();
+  document.getElementById('carRegistrationBtn')
+  .style.color = '#F55858';
+  hideAllModals();
+
+  carRegistrationDiv.classList.remove('hide');
+  carRegistrationDiv.classList.add('show');
+})
+
+//Showing Car Details
+function showCarDetails(index){
+  resetColor();
+  carNameElement = document.querySelectorAll('.carNameElement');
+  carNameElement[index].style.color = '#F55858';
+  
+  hideAllModals();      
+  let carDetailsDiv = document.querySelectorAll(`.carDetailsDiv${index}`);
+    
+  carDetailsDiv.forEach(div=>{
+    div.classList.remove('hide');
+    div.classList.add('show');
+  })
+}
+
+//Showing Car internal images adding div
+function showAddCarInternalImagesDiv(index){
+  let div = document.querySelectorAll(`.addCarInternalImagesDiv${index}`);
+  div.forEach(div=>{
+    if(div.classList.contains('hide')){
+    div.classList.remove('hide');
+    div.classList.add('show');
+    }else{
+      div.classList.remove('show');
+      div.classList.add('hide');
+    }
+  })
+}
+
+//Showing Update Car div
+function showUpdateCarDiv(index){
+  hideAllModals();
+  let div = document.querySelectorAll(`.update${index}CarDetails`);
+  div[0].classList.toggle('hide');
+}
+
+//Showing Car internal images updation div
+function showUpdateCarInternalImagesDiv(index){
+  let div = document.querySelectorAll(`.updateCarInternalImagesDiv${index}`);
+  div.forEach(div=>{
+    if(div.classList.contains('hide')){
+    div.classList.remove('hide');
+    div.classList.add('show');
+    }else{
+      div.classList.remove('show');
+      div.classList.add('hide');
+    }
+  })
+}
+
+//Showing delete car confirmation div
+function showDeleteCarDiv(index){
+  hideAllModals();
+  let div = document.querySelectorAll(`.delete${index}CarDiv`);
+  div[0].classList.toggle('hide');
+}
+
+// Showing shop details 
+shopDetailBtn = document.getElementById('shopMenu');
+shopDetailBtn.addEventListener('click',()=>{
+  resetColor();
+  shopDetailBtn.style.color = '#F55858' ;
+
+  hideAllModals() ;
+  let shopDetailsDiv = document.getElementById('shopDetailsDiv');
+  shopDetailsDiv.classList.remove('hide');
+  shopDetailsDiv.classList.add('show');
+})
+
+//Toggling shop Owner details
+function toggleShopOwnerDetails(){
+  let detailsDiv = document.getElementById('shopOwnerDetails');
+  if(detailsDiv.classList.contains('hide')){
+    detailsDiv.classList.remove('hide');
+    detailsDiv.classList.add('show');
+  }
+  else{
+    detailsDiv.classList.remove('show');
+    detailsDiv.classList.add('hide');
+  }
+}
+
+//Showing update shop div
+function showUpdateShopDiv(index){
+  hideAllModals();
+
+  let div = document.querySelectorAll(`.update${index}ShopDetails`);
+  div[0].classList.toggle('hide');  
+}
+
+// Showing db user details
+function showDbUserDetails(index){
+  resetColor();
+  userNameElement =document.querySelectorAll('.dbUserName');
+  userNameElement[index].style.color = '#F55858';
+  
+
+  hideAllModals();      
+  let dbUserDetailsDiv = document.querySelectorAll(`.dbUserDetailsDiv${index}`);
+  dbUserDetailsDiv.forEach(div=>{
+    div.classList.remove('hide');
+    div.classList.add('show');
+  })
+}
+
+// Showing dbUser modification div
+function dbUserModifyDiv(index){
+  hideAllModals();
+
+  let dbUserModifyDiv = document.querySelectorAll(`.dbUserModifyDiv${index}`);
+  dbUserModifyDiv.forEach(div=>{
+    div.classList.remove('hide');
+    div.classList.add('show');
+  })
+}
+
+// Showing delete dbUser confirmation div
+function showDeleteDbUserDiv(index){
+  hideAllModals();
+
+  let deleteDbUserDiv = document.querySelectorAll(`.deleteDbUserDiv${index}`);
+  deleteDbUserDiv.forEach(div=>{
+    div.classList.remove('hide');
+    div.classList.add('show');
+  })
+}
+
+</script>
+
+<!-- ***** Footer below ***** -->
+  <%- include('./partials/footer.ejs') %>
+<!-- End of footer section -->

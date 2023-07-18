@@ -1,0 +1,215 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Muhammad Zubair">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+
+    <title><%= sentTitle %></title>
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/rentACar.css">     
+    <link rel="stylesheet" type="text/css" href="/public/css/teamProfile.css">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/brands.min.css">
+    <link rel="icon" type="image/x-icon" href="../../public/images/favicons/rentACarLogo.jpg">
+    <style>
+      div.userMessage{
+        margin: 0;
+        position: relative;
+        top: -15px;
+        height: 60%;
+        width: 50%;
+        border-top-left-radius: 10rem;
+        transition: all 1s;
+        left: 67%;
+        border-bottom-left-radius: 10rem;
+        padding: 2% 0;
+        animation-name: pullRight;
+        animation-duration: 2s;
+      }
+      @keyframes pullRight {
+        0%{
+          left: 200%;
+        }
+        100%{
+          left:67%;
+        }
+      }
+      div.alert{        
+        border-top-left-radius: 10rem;        
+        border-bottom-left-radius: 10rem;        
+      }
+      button.closeUserMessage{
+        font-size: 3rem;
+        margin-right: -7%;
+        margin-top: -2%;
+      }
+        .show{     
+      transform: scale(1);     
+    } 
+
+    .hide{      
+        transform: scale(0);               
+    }
+    
+      /* Modal will come above/over other elements on clicking a button */
+      div.formModal {               
+        position: fixed;        
+        z-index: 1;
+        background-color: rgba(0, 0, 0, 0.9);        
+        overflow: auto;
+        width: 100%;
+        height: 100vh;
+        margin-top: -7%;
+        transition:all 1s;     
+      }
+
+      /* A button to close modal */
+    span.closeModal{
+      font-size: 200%;
+      font-weight: 900;
+      cursor: pointer;
+      }
+    div#underConstructionDiv{
+      position: fixed;
+      z-index: 1;
+      width: 100%;
+    }
+    </style>
+    </head>
+    
+<body>
+    
+    <header class="header-area header-sticky">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="main-nav">
+                    <!-- ***** Logo Start ***** -->
+                    <a href="#" class="logo">Rent A Car</a>
+                    <!-- ***** Logo End ***** -->
+                    <!-- ***** Menu Start ***** -->
+                    <ul class="nav">
+                    <% if(!currentUser) { %> 
+                      <li class="scroll-to-section"><a href="/">Home</a></li>
+                        <!-- <li class="scroll-to-section"><a href="/index#about">About</a></li>                                                                            -->
+                        
+                        <li class="nav-item dropdown" style="margin-top: -1%;">
+                          <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Services
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="servicesDropdown1">
+                              <a class="dropdown-item" href="/index#service1">Rent a car with driver</a>
+                              <a class="dropdown-item" href="/index#service2">Rent a car without driver</a>
+                              <a class="dropdown-item" href="/index#service1">React a car for few days</a>
+                          </div>
+                        </li>
+
+                         <!-- <li class="scroll-to-section"><a href="/index#team">Why Us</a></li> -->
+                        <li class="scroll-to-section"><a href="/index#contact-us">Contact Us</a></li>
+                        <li><a href="/vehicles">Vehicles</a></li>                        
+                        
+                            <li class="scroll-to-section">
+                              <a href="/user/login">Log In</a>
+                            </li>
+                          <% } else if (currentUser.role == 'dbUser') { %>
+
+                            <li><a href="/issuedCars">Issued Cars</a></li>
+
+                            <li class="nav-item dropdown" style="margin-top: -1%;">
+                              <a class="nav-link dropdown-toggle" href="#" id="adminDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <%= currentUser.fullName %> 
+                              </a>
+                              <div class="dropdown-menu" aria-labelledby="adminDropdown1">
+                                  <a class="dropdown-item" href="/adminPanel/2/customers">Admin Panel</a>
+                                  <a class="dropdown-item" href="/logout">Log Out</a>
+                              </div>
+                            </li>                            
+
+                          <% } else if (currentUser.role=='admin') { %>
+
+                            <li><a href="/issuedCars">Issued Cars</a></li>
+
+                            <li class="nav-item dropdown" style="margin-top: -1%;">
+                              <a class="nav-link dropdown-toggle" href="#" id="adminDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <%= currentUser.fullName %> 
+                              </a>
+                              <div class="dropdown-menu" aria-labelledby="adminDropdown2">
+                                  <a class="dropdown-item" href="/adminPanel/2/customers">Admin Panel</a>
+                                  <a class="dropdown-item" href="/logout">Log Out</a>
+                              </div>
+                            </li>                            
+
+                         <% }else{ %>
+
+                          <li class="scroll-to-section"><a href="/">Home</a></li>
+                          <!-- <li class="scroll-to-section"><a href="/index#about">About</a></li>                                                                            -->
+                          
+                          <li class="nav-item dropdown" style="margin-top: -1%;">
+                            <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Services
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="servicesDropdown2">
+                                <a class="dropdown-item" href="/index#service1">Rent a car with driver</a>
+                                <a class="dropdown-item" href="/index#service2">Rent a car without driver</a>
+                                <a class="dropdown-item" href="/index#service1">React a car for few days</a>
+                            </div>
+                          </li>
+
+                           <!-- <li class="scroll-to-section"><a href="/index#team">Why Us</a></li> -->
+                          <li class="scroll-to-section"><a href="/index#contact-us">Contact Us</a></li>
+                          <li><a href="/vehicles">Vehicles</a></li>                        
+                          
+                          <li class="nav-item dropdown" style="margin-top: -1%;">
+                            <a class="nav-link dropdown-toggle" href="#" id="customerDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <%= currentUser.fullName %> 
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="customerDropDown">
+                              <a class="dropdown-item" href="/customer/dashboard/2/reservations">Dashboard</a>
+                              <a class="dropdown-item" href="/logout">Log Out</a>      
+                            </div>
+                          </li>                          
+
+                        <%  } %>                    
+                    </ul>
+                    <a class='menu-trigger'>
+                        <span>Menu</span>
+                    </a>
+                    <!-- ***** Menu End ***** -->
+                </nav>
+                            
+                <div class="container mt-3 text-center userMessage">                  
+                  
+                    <% if(error && error.length > 0){ %>
+                    <div class="alert alert-danger row"  role="alert">
+                      <h4 class="col-md-9 userMessageText">
+                          <%= error %>                        
+                      </h4>
+                        <button type="button" class="close col-md-3" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true" class="btn btn-danger p-2 userMessageBtn">CLEAR</span></button>
+                    </div>
+                    <%}%>    
+                    <% if(success && success.length > 0){ %>
+                    <div class="alert alert-success row" role="alert">
+                      <h4 class="col-md-9 userMessageText">
+                          <%= success %>
+                      </h4>
+                        <button type="button" class="close col-md-3" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true" class="btn btn-danger p-2 userMessageBtn">CLEAR</span></button>
+                    </div>
+                    <% } %>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</header>      
+    
+      <!-- Under construction container  -->
+    <div class="hide" id="underConstructionDiv">
+      <%-include('../underConstruction.ejs')%>
+    </div>
+      <!-- End of  Under construction container  -->

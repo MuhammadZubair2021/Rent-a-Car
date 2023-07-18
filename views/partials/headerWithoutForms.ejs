@@ -1,0 +1,141 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Muhammad Zubair">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+
+    <title><%= sentTitle %></title>
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/rentACar.css">     
+    <link rel="stylesheet" type="text/css" href="/public/css/teamProfile.css">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/brands.min.css">  
+
+    <style>
+         div.userMessage{
+        margin: 0;
+        position: relative;
+        top: -15px;
+        height: 60%;
+        width: 50%;
+        border-top-left-radius: 10rem;
+        transition: all 1s;
+        left: 62%;
+        border-bottom-left-radius: 10rem;
+        padding: 2% 0;
+        animation-name: pullRight;
+        animation-duration: 2s;
+      }
+      @keyframes pullRight {
+        0%{
+          left: 200%;
+        }
+        100%{
+          left:62%;
+        }
+      }
+      button.closeUserMessage{
+        font-size: 3rem;
+        margin-right: -7%;
+        margin-top: -2%;
+      }
+      
+    </style>
+    </head>   
+<body>
+    
+    <header class="header-area header-sticky">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="main-nav">
+                    <!-- ***** Logo Start ***** -->
+                    <a href="#" class="logo">Rent A Car</a>
+                    <!-- ***** Logo End ***** -->
+                    <!-- ***** Menu Start ***** -->
+                    <ul class="nav">
+                      <% if(!currentUser){ %>
+                        <li class="scroll-to-section"><a href="/">Home</a></li>
+                        <!-- <li class="scroll-to-section"><a href="/index#about">About</a></li>                                                                            -->
+                        
+                        <li class="nav-item dropdown scroll-to-section" style="margin-top: -1%;">
+                            <a class="nav-link  dropdown-toggle" href="/index#service1" data-bs-toggle="dropdown"> Services </a>
+                             <ul class="dropdown-menu">
+                               <li><a class="dropdown-item" href="/index#service1">Rent a car with driver</a></li>
+                               <li><a class="dropdown-item" href="/index#service2">Rent a car without driver</a></li>
+                               <li><a class="dropdown-item" href="/index#service1">React a car for few days</a></li>
+                             </ul>
+                         </li>
+                         <!-- <li class="scroll-to-section"><a href="/index#team">Why Us</a></li> -->
+                        <li class="scroll-to-section"><a href="/index#contact-us">Contact Us</a></li>
+                        <li><a href="/categories">Categories</a></li>
+                        <li><a href="/issuedCars">Issued Cars</a></li>
+                        
+                        <li class="scroll-to-section">
+                          <a href="/user/login" class="loginBtn">Log In</a>
+                        </li>  
+                        <% }else if (currentUser.email == 'bilalkpk520@gmail.com') { %>
+                         
+                          <li><a href="/issuedCars">Issued Cars</a></li>
+                            <li class="nav-item dropdown scroll-to-section" style="margin-top: -1%;">
+                              <a class="nav-link  dropdown-toggle" href="#" data-bs-toggle="dropdown"><%= currentUser.fullName %> </a>
+                               <ul class="dropdown-menu">
+                                 <li><a class="dropdown-item" href="/adminPanel/2/customers">Admin Panel</a></li>
+                                 <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+                               </ul>
+                           </li> 
+
+                          <% } else if (currentUser.role) { %>
+                           
+                            <li><a href="/issuedCars">Issued Cars</a></li>
+                            <li class="nav-item dropdown scroll-to-section" style="margin-top: -1%;">
+                              <a class="nav-link  dropdown-toggle" href="#" data-bs-toggle="dropdown"><%= currentUser.fullName %> </a>
+                               <ul class="dropdown-menu">
+                                 <li><a class="dropdown-item" href="/adminPanel/2/customers">Admin Panel</a></li>
+                                 <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+                               </ul>
+                           </li>                           
+
+                         <% } else { %>
+                            <li class="nav-item dropdown scroll-to-section" style="margin-top: -1%;">
+                                <a class="nav-link  dropdown-toggle" href="#" data-bs-toggle="dropdown"><%- currentUser.fullName %> </a>
+                                 <ul class="dropdown-menu">
+                                   <li><a class="dropdown-item" href="/customer/dashboard">Dashboard</a></li>
+                                   <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+                                 </ul>
+                             </li>
+                        <%  } %>                    
+                    </ul>
+                    <a class='menu-trigger'>
+                        <span>Menu</span>
+                    </a>
+                    <!-- ***** Menu End ***** -->
+                </nav>
+                                
+                <div class="container mt-3 text-center userMessage">
+                    <% if(error && error.length > 0){ %>
+                    <div class="alert alert-danger"  role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true" >&times; &nbsp; &nbsp;</span></button>
+                        <h4>
+                            <%= error %>
+                        </h4>
+                    </div>
+                    <%}%>    
+                    <% if(success && success.length > 0){ %>
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4>
+                            <%= success %>
+                        </h4>
+                    </div>
+                    <% } %>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</header>

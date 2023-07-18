@@ -1,0 +1,239 @@
+    
+    <!-- ***** Header Area Start ***** -->
+    <%-include('./partials/header.ejs') %>
+    <!-- ***** Header Area End ***** -->
+<style>
+    .carImage{
+        transition: all 0.6s;
+    }
+    .carImage:hover{
+        transform: scale(1.05);               
+    }
+    img#searchIcon{
+        position: absolute;
+        left: 71%;
+        top: 60%;
+        width: 13%;
+        height: 18%;
+        cursor: pointer;
+    }
+</style>
+
+    <div class="container" style="margin-top: 100px;">
+        <div class="row w-100">
+            <div class="col-md-3">
+                <div class="row w-100 mt-3">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header" style="background-color: #007BFF;">
+                                <h5 class="text-white">
+                                    SEARCH
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <input type="text" class="form-control rounded-pill" id="searchVehicleInput"
+                                    onkeyup="findCarByName()" placeholder="by Car Name">
+                                <img src="../public/images/searchIcon.jpg" id="searchIcon" alt="searchIcon"
+                                onclick="findCarByName()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row w-100 mt-5">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header" style="background-color: #007BFF;">
+                                <h5 class="text-white">
+                                    FILTER Vehicles by
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <ul name="filterVehicle" id="filterVehicle" class="unstyled">                                    
+                                    <li class="text-secondary">Rent Per Day</li>
+                                    <div class="row w-100">
+                                        <div class="col-md-12">
+                                          <div class="form-group-inline">
+                                            <label> 2000-4000 </label>
+                                            <input  type="radio"  onclick="applyFilter('<%= sentCars.length %>')" value="2000-4000" name="rentPerDay"> &nbsp;&nbsp;&nbsp;
+                                            <label> 4000-7000 </label> 
+                                            <input  type="radio"  onclick="applyFilter('<%= sentCars.length %>')" value="4000-7000" name="rentPerDay">
+                                          </div>
+                                        </div>         
+                                      </div>
+                                      <hr size="10%" width="80%" color="brown" style="margin-top: 0;">
+
+                                      <li class="text-secondary">Driving Mode</li>
+                                      <div class="row w-100">
+                                          <div class="col-md-12">
+                                            <div class="form-group-inline">
+                                              <label for="auto">Auto  </label>
+                                              <input  type="radio" onclick="applyFilter('<%= sentCars.length %>')" value="Auto" name="drivingMode"> &nbsp;&nbsp;&nbsp;
+                                              <label for="manual">Manual   </label> 
+                                              <input  type="radio" onclick="applyFilter('<%= sentCars.length %>')" value="Manual" name="drivingMode">
+                                            </div>
+                                          </div>         
+                                        </div>
+                                        <hr size="10%" width="80%" color="brown" style="margin-top: 0;">
+
+                                    <li class="text-secondary">Air Condition</li>
+                                    <div class="row w-100">
+                                        <div class="col-md-12">
+                                          <div class="form-group-inline">
+                                            <label for="yes">Yes  </label>
+                                            <input  type="radio"  onclick="applyFilter('<%= sentCars.length %>')" value="Yes" name="airCondition"> &nbsp;&nbsp;&nbsp;
+                                            <label for="no">No   </label> 
+                                            <input  type="radio"  onclick="applyFilter('<%= sentCars.length %>')" value="No" name="airCondition">
+                                          </div>
+                                        </div>         
+                                      </div>                                     
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row w-100 mt-5">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header" style="background-color: #007BFF;">
+                                <h5 class="text-white">
+                                    Customer Support
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li class="my-1">
+                                      <a href="/i#contact-us">Contact Us</a>
+                                    </li>
+                                    <li class="my-1">
+                                      <a href="mailto:">abc2022@gmail.com</a>
+                                    </li>                                    
+                                    <li class="my-1">
+                                      <a href="#!" >+92-33x234x44x</a>
+                                    </li>
+                                  </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- End of col-md-3 (main row left section) -->
+
+            <div class="col-md-9">
+                <div class="row w-100 my-2 p-2" id="noMatchDiv" style="display:none ;">
+                    <div class="col-md-9 mx-auto">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Filter Results</h3>
+                            </div>
+                            <div class="card-body text-center">
+                                <h2 class="my-2 text-danger">No Result found for applied filter</h2>
+                                <button class="btn btn-primary rounded-pill" id="clearFilterBtn"
+                                onclick="clearAllFilters()">Clear Filters</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% sentCars.forEach(car => { %>
+                <div class="row w-100 border pt-2 mt-3">                    
+                    <div class="col-md-5">
+                        <img src="/<%= car.displayImage %> " alt="Car image" class="carImage vehicleImage" width="100%" height="100%">
+                    </div>
+                    <div class="col-md-7">
+                        <div class="d-flex flex-column mb-3">
+                            <h2 class="carName text-primary">
+                                <%= car.fullName %> 
+                            </h2>
+                            <div class="my-1">
+                                <span class="text-black-50">Model</span>
+                                <h5 class="text-primary"><%= car.model %> </h5>
+                            </div>             
+                            </div>
+                        <hr width="90%" size="10px">
+
+                        <% let sliceCarDetails = (car.details).slice(0,150); %>
+
+                        <div class="row w-100 mt-2 mb-4">
+                            <div class="col-md-12">
+                                <p>
+                                    <%= sliceCarDetails %> 
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row w-100">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td class="border-right border-left tableData">
+                                            <div class="d-flex flex-column">
+                                                <small class="text-secondary">Rent/day</small>
+                                                <h6>
+                                                    <span class="rentPerDay"><%= car.rentPerDay%></span> PKR/day
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td class="border-right tableData">
+                                            <div class="d-flex flex-column">
+                                                <small class="text-secondary">Driving Mode</small>
+                                                <h6 class="drivingMode">
+                                                    <%= car.drivingMode %> 
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td class="border-right tableData">
+                                            <div class="d-flex flex-column">
+                                                <small class="text-secondary">Air Condition</small>
+                                                <h6 class="airCondition">
+                                                    <%= car.airCondition %> 
+                                                </h6>
+                                            </div>
+                                        </td>                                       
+
+                                        <td class="border-right tableData">
+                                            <div class="d-flex flex-column">
+                                                <small class="text-secondary">Staus</small>
+                                                <h6 class="text-primary">
+                                                    <%= car.status %> 
+                                                </h6>
+                                            </div>
+                                        </td>                                                              
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row w-100 mt-2 mb-4">
+                            <div class="col-md-4 my-1 mb-2 col-sm-12">
+                                <a href="/vehicles/carDetails/withId/<%= car._id %> "
+                                    class="btn btn-primary rounded-pill">Details View</a>
+                            </div>
+                            <% if (car.status==='Available') { %>
+                                <div class="col-md-8 my-1 col-sm-12">
+                                    <a href="/vehicles/reserveCar/withIds/<%= car._id %>"
+                                        class="btn btn-block btn-primary rounded-pill">Let's Reserve</a>
+                                </div>
+                            <% }else{ %> 
+                                <div class="col-md-8 col-sm-12">
+                                    <a href="#"
+                                        class="btn btn-block btn-secondary rounded-pill"
+                                        style="cursor: not-allowed;"
+                                        disabled="true">Sorry! Already reserved</a>
+                                </div>
+                            <% } %>
+                            
+                        </div>
+                    </div> <!-- Col-md-8 -->                                      
+                </div>
+                <% }) %> <!-- End of sentCars.forEach()-->                
+            </div>                                     
+            <!-- End of col-md-9 (right section) -->
+        </div>
+        <!-- End of the main row -->
+    </div> 
+    <!--Container Ends-->     
+    
+    <script src="../public/js/vehicleFilters.js"></script>
+
+    <!-- ***** Footer below ***** -->
+    <%- include('./partials/footer.ejs') %>

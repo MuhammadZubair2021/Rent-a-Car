@@ -1,0 +1,66 @@
+        <!-- ***** Header Area Start ***** -->
+    <%-include('./partials/header.ejs') %>
+    <!-- ***** Header Area End ***** -->
+
+<div class="row justify-content-center" style="margin-top: 90px;">
+<div class="col-md-6">
+<div class="card">
+  <div class="card-header">
+    You have new Idea! Please share it.
+  </div>
+<article class="card-body">
+  <div class="card-title">
+    Add Idea    
+  </div>
+<form action="/addIdea" method="POST" enctype="multipart/form-data">
+	<div class="form-row">
+		<div class="col form-group">
+			<label>Idea Logo/Image</label>   
+		  	<input type="file" id="image" name="image" accept="image/*" class="form-control"  oninvalid="this.setCustomValidity('Please select Idea Logo or Image')" onvalid="this.setCustomValidity('')">
+		</div> <!-- form-group end.// -->
+		<div class="col form-group">
+			<label>Idea title</label>
+		  	<input type="text" id="title" name="title" required class="form-control" placeholder="DPaPIC...">
+		</div>    
+	</div> <!-- form-row end.// -->
+	<div class="form-group">
+		<label>Description</label>
+		<textarea name="discription" id="discription" cols="30" rows="6" placeholder="Idea description goes here" required="" class="form-control"></textarea>                            
+	</div> <!-- form-group end.// -->
+  <div class="form-row">
+		<div class="col form-group">
+			<label>Idea Category</label>   
+      <select id="category" required name="category" class="form-control">		    
+        <option value="Android App">Android App</option>
+        <option value="Website">Website</option>
+        <option value="Flutter App">Flutter App</option>
+        <option value="IOS App">IOS App</option>
+        <option value="Desktop App">Desktop App</option>
+        <option value="other type Idea">Others</option>
+      </select>
+		</div> <!-- form-group end.// -->
+		<div class="col form-group">
+			<label>Number of developers</label>
+      <select id="ideaCategory" required name="numOfDevelopers" class="form-control">		    
+        <option value="1">Me alone</option>
+        <option value="2">Me and one other</option>
+        <option value="3">Me and two others</option>
+        <option value="4">Me and three others</option>
+        <option value="5">Me and four others</option>
+
+      </select>
+		</div>    
+	</div> <!-- form-row end.// -->	  
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block">Add Idea </button>
+    </div> <!-- form-group// -->         
+</form>
+</article> <!-- card-body end .// -->
+</div> <!-- card.// -->
+</div> <!-- col.//-->
+
+</div> <!-- row.//-->
+
+
+    <!-- ***** Footer below ***** -->
+    <%- include('./partials/footer.ejs') %>

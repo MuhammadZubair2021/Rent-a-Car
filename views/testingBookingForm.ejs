@@ -1,0 +1,68 @@
+<!-- ***** Header Area Start ***** -->
+<%-include('./partials/header.ejs') %>
+<!-- ***** Header Area End ***** -->
+
+        <div class="row justify-content-center" style="margin-top: 90px;">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between">
+                <h3>Please Enter the code sent to  phoneNumber  </h3>                
+              </div>
+              <article class="card-body">               
+                <form action="" method="post">
+                  <div class="form-group">
+                    <label for="code">Enter the Code</label>
+                    <input type="text" name="code" 
+                    class="form-control inputField" id="code" required>                    
+                    <button type="submit" class="mt-2 btn btn-primary"
+                    id="btn">
+                    <span id="btnText">Verify</span> 
+                    <span id="span1" class="loadingSpan  ml-2" ></span> 
+                    <span id="span2" class="loadingSpan ml-1" ></span> 
+                    <span id="span3" class="loadingSpan ml-1" ></span> 
+                   </button>                   
+                  </div>                          
+                </form>
+
+                <br>
+                <div id="sendCodeAgain" style="display: none;">
+                  <h6>Didn't get the code? <a href="/sentOTPAgain/sms" class="text-primary" style="cursor: pointer;"> Send again </a></h6>                              
+                  <h5>Or get code with </h5>            
+                  <a href="/sentOTPAgain/call" class="btn btn-primary mt-2"> Call </a>                      
+                </div>
+                <div id="willSendCodeIn">
+                  <h6>Didn't get the code? Don't Worry
+                  <h5>We will show other Options in 
+                    <span id="time" class="text-primary"></span> Seconds</h5>                                
+                </div>
+              </article>
+            </div> <!-- Card ending  -->
+          </div> <!-- Col ending  -->
+        </div> <!-- Row ending  -->                  
+    <!-- End of car booking form -->
+
+    <script>
+      let everyMinuteInterval = setInterval(showOtherOptions,5000),
+          everySecondInterval = setInterval(showTime,1000),
+          timeSpan            = document.getElementById('time'),
+          sendCodeAgainDiv    = document.getElementById('sendCodeAgain'),
+          willSendCodeInDiv   = document.getElementById('willSendCodeIn');
+      let time = 4 ;
+      function showTime(){
+        timeSpan.textContent = time ;
+        time-- ;
+      }
+
+      function showOtherOptions(){                
+        willSendCodeInDiv.style.display='none';     
+
+        sendCodeAgainDiv.style.display = 'block';       
+
+          clearInterval(everySecondInterval);
+          clearInterval(everyMinuteInterval);
+      }
+    </script>
+
+<!-- ***** Header Area Start ***** -->
+<%-include('./partials/footer.ejs') %>
+<!-- ***** Header Area End ***** -->

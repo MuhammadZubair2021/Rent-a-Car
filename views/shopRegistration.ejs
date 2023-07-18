@@ -1,0 +1,61 @@
+
+<div class="container mt-5 pt-5">
+  <div class="card w-75 mx-auto">
+    <div class="card-header">
+      <h3>Shop (Bargain) details</h3>
+    </div>
+    <div class="card-body">
+      <form action="/adminPanel/shopRegistration" method="post">
+        <div class="row w-100">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="name">Shop/Bargain Name</label>
+              <input required type="text" name="fullName" class="form-control">              
+            </div>
+          </div>          
+        </div>
+        
+        <div class="row w-100">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input required type="email" name="email" class="form-control email">
+              <small class="emailError"></small>            
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="phoneNumber">Contact No</label>
+              <input required type="tel" name="phoneNumber" class="phoneNumber form-control">
+              <small class="phoneNumberError"></small>              
+            </div>
+          </div>
+        </div>
+
+        <div class="row w-100">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="shopAdress">Shop Adress</label>
+              <input required type="text" name="address" class="form-control" placeholder="opposite to abc Campus">              
+            </div>
+          </div>
+        </div>        
+       
+
+        <div class="row w-100">
+         
+        </div>
+
+        <div class="row  mt-2">
+          <div class="col-md-6">
+            <button type="submit" class="form-submit btn btn-primary btn-block"
+            style="cursor: not-allowed;">Register Shop</button>
+          </div>
+          <div class="col-md-6">
+            <button type="reset" class="btn btn-warning btn-block">CLEAR FORM</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 

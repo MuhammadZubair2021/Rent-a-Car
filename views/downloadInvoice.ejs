@@ -1,0 +1,16 @@
+    
+    <!-- ***** Header Area Start ***** -->
+    <%-include('./partials/header.ejs')%>
+    <!-- ***** Header Area End ***** -->
+    
+    <div class="container startContainer">      
+      <div class="row w-100 text-center my-3">
+          <div class="col-md-6">
+            <h6>click on below link to download Invoice PDF</h6>       
+            <a href="<%= filePath %>" download="<%= fileName %>" class="btn btn-success mt-2">Download Invoice</a>
+          </div>          
+        </div>           
+    </div> <!-- Container End -->   
+    
+    <!-- ***** Footer below ***** -->
+    <%- include('./partials/footer.ejs') %>

@@ -1,0 +1,124 @@
+
+<!--  All the modals (formModals) and its styling are present in header.ejs file -->
+<%- include('./partials/headerWithoutForms.ejs') %> 
+
+<div class="container mt-5 pt-5">
+  <div class="card w-75 mx-auto">
+    <div class="card-header">
+      <div class="d-flex justify-content-between">
+        <h3>Register a new Car</h3>
+      </div>
+    </div>
+    <div class="card-body">
+      <form action="/adminPanel/carRegistration" method="post" enctype = "multipart/form-data" >
+
+        <div class="row w-100">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="name">Car Name:</label>
+              <input required type="text" name="fullName" class="form-control" placeholder="Honda Civic">              
+            </div>
+          </div>
+        </div>
+
+        <div class="row w-100">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="displayImage">Display Image:</label>
+              <input type="file" id="displayImage" name="displayImage" accept="image/*" class="form-control"  
+              oninvalid="this.setCustomValidity('Please select a CAR Image for display Image')" 
+              onvalid="this.setCustomValidity('')">
+              <small class="form-text">Select only one picture for display Image</small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="model">Model:</label>
+              <input required type="text" name="model" class="form-control" placeholder="2017 / 2017+">
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="row w-100">
+          <div class="col-md-12">
+            <lable class="my-1">Driving Mode:</lable>
+            <div class="form-group-inline">
+              <label for="auto">Auto  </label>
+              <input  type="radio" required id="auto" value="Auto" name="drivingMode"> &nbsp;&nbsp;&nbsp;
+              <label for="manual">Manual   </label> 
+              <input  type="radio" required id="manual" value="Manual" name="drivingMode">
+            </div>
+          </div>         
+        </div>
+
+        <hr size="10%" width="60%" color="brown">
+
+        <div class="row w-100">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="rentPerDay">Rent Per Day:</label>
+              <input required type="text" name="rentPerDay" class="form-control" placeholder="4000 / 5000 ">              
+            </div>
+          </div>
+        </div>
+
+        <div class="row w-100">
+          <div class="col-md-12">
+            <label class="my-1">Air Condition:</label>
+            <div class="form-group-inline">
+              <label for="yes">Yes  </label>
+              <input  type="radio" required id="yes" value="Yes" name="airCondition"> &nbsp;&nbsp;&nbsp;
+              <label for="no">No   </label> 
+              <input  type="radio" required id="no" value="No" name="airCondition">
+            </div>
+          </div>         
+        </div>
+
+        <hr size="10%" width="90%" color="brown">
+
+        <div class="row w-100">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="colour">Colour:</label>
+              <input required type="text" name="colour" class="form-control" placeholder="Black / white">              
+            </div>
+          </div>
+        </div>
+       
+        <div class="row w-100">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="engineCapacity">Engine Capacity:</label>
+              <input required type="text" class="form-control" name="engineCapacity" placeholder="1800 cc">              
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="seatCapacity">Seat Capacity</label>
+              <input required type="text" class="form-control" name="seatCapacity" placeholder="5 seater">              
+            </div>
+          </div>
+        </div>
+
+        <div class="row w-100 my-1">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="carDetails">Specifications or Details</label>
+              <textarea name="details" id="carDetails" class="form-control" rows="10"
+              placeholder="Honda Civic is powered by a 1799 cc engine having 6500 RPM. Its dimensions in “mm” are 4656 X 1799 X 1433 (L X W X H). Its wheelbase is 2700 mm. The vehicle has an automatic transmission. It can carry five persons in it."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row w-75 mt-2 mx-auto">
+          <div class="col-md-12">
+            <button type="submit" class="btn btn-primary btn-block rounded-pill">REGISTER CAR</button>
+          </div>          
+        </div>
+      </form>
+    </div>    
+  </div>
+</div> 
+<!--container end.//-->
+<%- include('./partials/footer.ejs') %> 

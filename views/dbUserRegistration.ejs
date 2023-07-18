@@ -1,0 +1,88 @@
+<%-include('./partials/headerWithoutForms.ejs')%>
+
+<div class="container mt-5 pt-5">
+  <div class="card w-75 mx-auto">
+    <div class="card-header">
+      <h3>Add Database User !</h3>
+    </div>
+    <div class="card-body">
+      <form action="/adminPanel/dbUserRegistration" method="post">
+        <div class="row w-100">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="cnic">CNIC NO</label>
+              <input required type="text" pattern="\d{5}-\d{7}-\d{1}" name="cnic" class="form-control cnic">
+              <small class="form-text">CNIC No format : xxxxx-xxxxxxx-x </small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input required type="text" name="fullName" class="form-control" placeholder="Muhammad Bilal">
+            </div>
+          </div>
+        </div>
+
+        <div class="row w-100">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input required type="email" name="email" class="email form-control" placeholder="abc@gmail.com">
+              <small class="emailError form-text"></small>
+            </div>
+          </div>
+        </div>
+
+        <div class="row w-100">
+          <div class="col-md-12">
+            <div class="form-group-inline">
+              <label for="readOnly"> Read Only</label>
+              <input  type="radio" required id="readOnly" value="readOnly" name="authority"> &nbsp;&nbsp;&nbsp;
+              <label for="readAndWrite">Read and Write   </label> 
+              <input  type="radio" required id="readAndWrite" value="readAndWrite" name="authority">
+            </div>
+          </div>         
+        </div>
+       
+        <div class="row w-100">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input required type="password" class="form-control password" name="password">
+              <span onclick="togglePassVisibility()" class="btn btn-secondary btn-sm mt-2 toggleBtn">Show</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="repeatPassword">Confirm Password</label>
+              <input required type="password" class="form-control repeatPassword">
+              <small class="repeatPasswordError form-text"></small>
+            </div>
+          </div>
+        </div>
+
+        <div class="row w-100">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="phoneNumber">Contact No</label>
+              <input required type="tel" name="phoneNumber" class="phoneNumber form-control">
+              <small class="phoneNumberError form-text"></small>
+            </div>
+          </div>
+        </div>
+
+        <div class="row  mt-2">
+          <div class="col-md-6">
+            <button type="submit" class="form-submit btn btn-primary btn-block"
+            style="cursor: not-allowed;" disabled="true">ADD USER</button>
+          </div>
+          <div class="col-md-6">
+            <button type="reset" class="btn btn-warning btn-block">CLEAR FORM</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 
+
+<%-include('./partials/footer.ejs')%>

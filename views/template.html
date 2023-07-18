@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pdf Document</title>    
+</head>
+<body>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff;">
+              <img height="100" width="100" src="{{reservation.linkStarting}}/public/images/rentacarlogo.png" alt="">
+            </td>
+            <td align="left" bgcolor="#ffe77b" style="background-color: #fff;">
+              <h2 style="font-weight: 900;color: brown;">Online Car Reservation</h2>
+              <p>Near Hangu Campus, Hangu KPK<br/>
+                https://hangurentacar.herokuapp.com | rentacar453@gmail.com | +9233x-xxxxxx-x</p>
+            </td>
+        </tr>
+    </table> 
+    <h1 style="font-size: 30px;font-weight: 600; color: green; margin-top: 10px;">Customer Informations</h1>    
+    <table width="95%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+          <td width="30%" align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff;">
+            <p>Invoice To:</p>
+            <h3 style="font-weight: 800;color: brown;">{{reservation.customerName}}</h3>
+          </td>
+          <td width="70%" align="left" bgcolor="#ffe77b" style="background-color: #fff;">             
+          </td>
+      </tr>
+      <tr>
+        <td width="30%" align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff;">
+          <p>Phone Number</p>
+          <h3>{{reservation.customerPhoneNumber}}</h3>
+        </td>
+        <td width="70%" align="left" bgcolor="#ffe77b" style="background-color: #fff;">             
+        </td>
+      </tr>
+  </table>  
+      <table width="95%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 10px;">
+        <tr>
+          <td width="30%" align="left" valign="top" bgcolor="#ffe77b" style="background-color:#fff;">
+            <p>Email Address</p>
+            <h3>{{reservation.customerEmail}}</h3>
+          </td>
+          <td width="40%" align="left" bgcolor="#ffe77b" style="background-color: #fff;">             
+          </td>
+          <td width="30%" align="right" bgcolor="#ffe77b" style="background-color: #fff;">
+            <h4 style="font-weight: 700;color: #000000;">Confirm On: {{reservation.confirmingDate}} ({{reservation.confirmingTime}})</h4> 
+            <h4 style="font-weight: 700;color: #000000;">Reference Number: {{reservation.referenceNumber}}</h4>            
+          </td>
+        </tr>
+      </table>
+      <hr>   
+      <table class="table" width="95%" style="margin-top: 10px;">
+          <thead>
+            <tr>
+              <th scope="col">Display Image</th>
+              <th scope="col">Description</th>              
+              <th scope="col">Reservation Date</th>
+              <th scope="col">Returning Date</th>              
+            </tr>
+          </thead>
+          <tbody>                      
+            <tr>
+              <td width="15%">
+                <img height="70" width="70" src="{{reservation.linkStarting}}/{{reservation.carImage}}" alt="">
+              </td>
+              <th scope="row" width="38%">
+                <h3 style="font-weight: 900;color:chocolate">{{reservation.carName}}</h3>                
+              </th>
+              <td width="18%">{{reservation.reservationDate}}</td>
+              <td width="15%">{{reservation.returningDate}}</td>              
+            </tr>            
+          </tbody>
+        </table>
+        <table width="95%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="90%"  align="right" style="font-size: 25px;font-weight: 700;color:darkred; background-color: #f6f6f6;">Rent: </td>
+            <td width="10%" align="right" style="background-color: #f6f6f6;"><h2 style="font-size: 25px;font-weight: 700;color:rgb(82, 101, 228);">{{reservation.rent}}</h2>&nbsp;&nbsp;</td>
+          </tr>
+          <tr>
+            <td width="90%"  align="right" style="font-size: 25px;font-weight: 700;color:darkred; background-color: #f6f6f6;">Paid Amounts: </td>
+            <td width="10%" align="right" style="background-color: #f6f6f6;"><h2 style="font-size: 25px;font-weight: 700;color:rgb(82, 101, 228);">{{reservation.paidAmounts}}</h2>&nbsp;&nbsp;</td>
+          </tr>
+          <tr>
+            <td width="90%"  align="right" style="font-size: 25px;font-weight: 700;color:darkred; background-color: #f6f6f6;">Remaining Amounts: </td>
+            <td width="10%" align="right" style="background-color: #f6f6f6;"><h2 style="font-size: 25px;font-weight: 700;color:rgb(82, 101, 228);">{{reservation.remainingAmounts}}</h2>&nbsp;&nbsp;</td>
+          </tr>
+        </table>
+        <table width="95%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
+          <tr>
+            <td width="100%"  align="left" style="font-size: 25px;font-weight: 700;color:red;">Notice:</td>
+          </tr>
+          <tr>
+            <td width="100%"  align="left" style="font-size: 10px;font-weight: 700;color:#000;">A finance charge of 1.5% will be made on unpaid balances after 30 days.</td>
+          </tr>
+        </table>
+</body>
+</html>

@@ -1,0 +1,71 @@
+        <!-- ***** Header Area Start ***** -->
+    <%-include('./partials/header.ejs') %>
+    <!-- ***** Header Area End ***** -->
+
+<div class="row justify-content-center" style="margin-top: 90px;">
+<div class="col-md-6">
+<div class="card">
+  <div class="card-header">
+    Kindly Check <%= idea.title %> for approval
+  </div>
+  <article class="photo mt-4 mb-2" style='text-align:center;'>
+    <img src="/<%=idea.image%>" alt="" width="100px" height="100px" class="rounded-pill">    
+</article>
+<article class="card-body">
+<form action="/ideaApproved/<%=idea._id%>" method="POST" enctype="multipart/form-data">
+	<div class="form-row">
+		<div class="col form-group">
+			<label>Want to change idea logo !</label>   
+		  	<input type="file" id="image" name="image" accept="image/*" class="form-control" >
+		</div> <!-- form-group end.// -->
+		<div class="col form-group">
+			<label>Idea title</label>
+		  	<input type="text" id="title" name="title" class="form-control" value="<%= idea.title %>">
+		</div>    
+	</div> <!-- form-row end.// -->
+	<div class="form-group">
+		<label>Description</label>
+		<textarea name="discription" id="discription" cols="30" rows="6" class="form-control"><%= idea.discription%></textarea>                            
+	</div> <!-- form-group end.// -->
+  <div class="form-row">
+		<div class="col form-group">
+			<label>Idea Category</label>   
+      <select id="category" required name="category" class="form-control">
+        <option value="<%= idea.category %>" selected><%= idea.category %></option>		    
+        <option value="Android App">Android App</option>
+        <option value="Website">Website</option>
+        <option value="Flutter App">Flutter App</option>
+        <option value="IOS App">IOS App</option>
+        <option value="Desktop App">Desktop App</option>
+        <option value="other type Idea">Others</option>
+      </select>
+		</div> <!-- form-group end.// -->
+		<div class="col form-group">
+			<label>Number of developers</label>
+      <select id="ideaCategory" required name="numOfDevelopers" class="form-control">
+        <option value="<%= idea.numOfDevelopers %>" selected><%= idea.numOfDevelopers %></option>		    		    
+        <option value="1">Me alone</option>
+        <option value="2">Me and one other</option>
+        <option value="3">Me and two others</option>
+        <option value="4">Me and three others</option>
+        <option value="5">Me and four others</option>
+
+      </select>
+		</div>    
+	</div> <!-- form-row end.// -->	  
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block">Approved</button>
+    </div> <!-- form-group// -->         
+</form>
+</article> <!-- card-body end .// -->
+<div class="border-top card-body text-center">Or you want to <a href="/ideaRejected/<%=idea._id%>">REJECT</a></div>
+</div> <!-- card.// -->
+</div> <!-- col.//-->
+
+</div> <!-- row.//-->
+
+</div> 
+<!--container end.//-->
+
+    <!-- ***** Footer below ***** -->
+    <%- include('./partials/footer.ejs') %>

@@ -1,0 +1,27 @@
+  <!-- ***** Header Area Start ***** -->
+  <%-include('./partials/header.ejs') %>
+  <!-- ***** Header Area End ***** -->
+<div class="container-fluid" style="background-color: #009CD9; height: 100vh;">
+  <div class="container">    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="error-template" style="padding: 100px 15px;text-align: center; font-size: 2rem;">
+                <h1 style="font-size: 3.5rem; color: aqua;">
+                    Oops!</h1>
+                <h2 style="font-size: 2.5rem; color: rgb(250, 161, 191);"> Page Not Found</h2>
+                <div class="error-details" style=" color: rgb(251, 248, 251);">
+                    The page you are looking for was not found.
+                </div>
+                <div class="error-actions" style="margin-top:15px;margin-bottom:15px;  color: rgb(162, 233, 251);">
+                    <a href="/index" class="btn btn-primary btn-lg"><i class="fab fa-home"></i>
+                        Take Me Home </a>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+  <!-- ***** Footer below ***** -->
+  <%- include('./partials/footer.ejs') %>
+  </body>
+</html>

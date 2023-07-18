@@ -1,0 +1,198 @@
+    
+    <!-- ***** Header Area Start ***** -->
+    <%-include('./partials/header.ejs')%>
+    <!-- ***** Header Area End ***** -->
+    
+    <div class="container startContainer">
+
+      <!-- Enlarge Image onClick -->
+      <div class="hide" id="largeImageModal">        
+        <div class="row w-100">          
+          <div class="col-md-10">
+            <img src="" class="thumbnail" alt="Car image" 
+            width="100%" height="90%" id="largeImageModalImage">
+          </div>
+          <div class="col-md-2">
+            <a href="#" class="btn btn-danger p-1 closeLargeImageModal"
+            onclick="closeLargeImageModal()">CLOSE</a>
+          </div>
+        </div>        
+      </div>        
+      <!-- End of enlarge Image onClick -->
+
+      <div class="row mb-3 w-100 firstRow">
+        <div class="col-md-6">
+          <img src="/<%= sentCar.displayImage %> " class="thumbnail carLargeImage detailCarLargeImage"
+          id="carLargeImage"
+          alt="Car image" width="100%" height="100%" onclick="enLargeThisImage(this)">
+        </div>
+ 
+        <div class="col-md-6">
+          <div class="card p-2">
+            <div class="d-flex flex-column mb-3">
+              <h2 class="carName text-primary">
+                <%= sentCar.fullName %> 
+              </h2>
+              <div class="my-1">
+                <span class="text-black-50">Model</span>
+                <h5 class="text-primary"><%= sentCar.model %> </h5>
+              </div>             
+            </div>
+
+            <div class="mb-3">
+              <span class="text-black-50">Cost / day</span>
+              <h5 class="text-primary"><%= sentCar.rentPerDay %>  PKR / day</h5>
+            </div>
+            
+            <div class="p-3" style="background-color: rgb(251 251 251)">
+              <div class="row w-100">
+                <div class="col-md-6">
+                  <div class="mb-2 d-flex flex-column">
+                    <h6>Colour:</h6>
+                    <span class="text-black-50"><%= sentCar.colour %> </span>
+                  </div>
+    
+                  <div class="mb-2 d-flex flex-column">
+                    <h6>Seat Capacity:</h6>
+                    <span class="text-black-50"><%= sentCar.seatCapacity %> </span>
+                  </div>
+
+                  <div class="mb-2 d-flex flex-column">
+                    <h6>Driving Mode:</h6>
+                    <span class="text-black-50"><%= sentCar.drivingMode %> </span>
+                  </div>                  
+                </div>
+
+                <div class="col-md-6">
+                  <div class="mb-2 d-flex flex-column">
+                    <h6>Air Condition:</h6>
+                    <span class="text-black-50"><%= sentCar.airCondition %> </span>
+                  </div>
+    
+                  <div class="mb-2 d-flex flex-column">
+                    <h6>Engine Capacity:</h6>
+                    <span class="text-black-50"><%= sentCar.engineCapacity %> </span>
+                  </div>
+                  
+                  <div class="mb-2 d-flex flex-column">
+                    <h6>Status:</h6>
+                    <span class="text-primary"><%= sentCar.status %> </span>
+                  </div>                  
+                </div>
+              </div>
+              
+
+              <% if(sentCar.status === 'Available'){ %> 
+                <a href="/vehicles/reserveCar/withIds/<%= sentCar._id %>" 
+                  class="underConstructionBtn btn btn-block btn-primary rounded-pill">
+                  Awesome, Let's Book This Car</a>
+                <% } else{ %> 
+                <a href="#" class="btn btn-block btn-secondary" 
+                disabled="true"
+                style="cursor: not-allowed;">Sorry!, This car is reserved </a>
+                <% } %>
+            </div>
+
+          </div>
+        </div>
+     </div> <!--  End of Row  -->
+         
+    <% if(sentCar.internalImages.length>0) { %> 
+      <div class="row mb-2 mt-5 w-100">       
+        <% (sentCar.internalImages).forEach(image => { %>
+          <div class="col-md-3 mt-3">            
+            <a href="#"><img src="/<%= image %> "  width="99%" height="200" 
+              alt="Other images" class="thumbnail rounded carSmallImage"></a>            
+         </div>
+        <% }) %>
+      </div>
+    <% }else{%>      
+      <div class="row mb-2 mt-5 w-100">
+        <div class="col-md-12">
+          
+        </div>                                             
+      </div>
+    <% } %> 
+       
+
+     <div class="row w-100">
+       <div class="col-md-12 col-lg-12 col-sm-12">
+          <div class="d-flex flex-column mb-2 mt-5 px-5">
+            <span class="text-black-50">About</span>
+            <h3 class="text-primary carName"><%= sentCar.fullName %> </h3>
+          </div>
+          <hr width="20%" size="1px" color="#009ADA">
+       </div>
+     </div>
+    
+    <% let descriptionLength  = ((sentCar.details).length),
+           halfOfLength       = (descriptionLength/2)+50,
+           firstHalfDescription    = (sentCar.details).slice(0,halfOfLength),
+           secondHalfDescription   = (sentCar.details).slice(halfOfLength,descriptionLength);
+    %> 
+
+     <div class="row mt-5 w-100">
+     
+       <div class="col-md-6 px-5">
+        <p class="aboutCarText">
+          <%= firstHalfDescription %> 
+        </p>
+       </div>
+       <div class="col-md-6 px-5">
+          <p class="aboutCarText mb-2">
+            <%= secondHalfDescription %> 
+          </p>
+          
+          <% if(sentCar.status === 'Available'){ %> 
+            <a href="/vehicles/reserveCar/withIds/<%= sentCar._id %>" 
+            class="btn btn-block btn-primary rounded-pill">Let's Try Booking This</a>
+            <% } else{ %>
+            <a href="#" class=" btn btn-block btn-secondary rounded-pill" 
+            disabled="true"
+            style="cursor: not-allowed;">Sorry!, This car is reserved </a>
+            <% } %>
+
+       </div>
+     </div>
+     
+     <!-- Comments / feedbacks -->
+     <div class="row w-100 mt-3">
+       <div class="col-md-2">
+
+       </div>
+       <div class="col-md-10">
+        <div class="p-3 mb-2 bg-light text-dark">          
+          <a href="/vehicles/carDetails/carFeedback/withId/<%= sentCar._id %> " type="button" style="float: right;" class="btn btn-md btn-success float-right">Add Feedback</a>          
+          <br><br><br>
+        <% sentCar.feedbacks.forEach((feedback)=>{ %>
+          <div class="row mt-3">
+            <div class="col-md-12">
+              <strong>
+                <h4 class="text-primary feedbackAuthorName"><%= feedback.author.fullName %></h4>
+              </strong>
+
+              <%if(currentUser && (currentUser._id).equals(feedback.author.id)){%>
+              <span style="float:right;">
+                <a type="button"  class="btn btn-xs btn-warning" href="/vehicles/carDetails/carFeedback/modifyFeedback/withId/<%= sentCar._id %>/<%= feedback._id %>">
+                    Modify
+                </a>
+                <a type="button"  class="btn btn-xs btn-danger" href="/vehicles/carDetails/carFeedback/deleteFeedback/withId/<%= sentCar._id %>/<%= feedback._id %>  ">
+                  Delete
+                </a>
+              </span>
+              <%}%>
+              <h6 class="feedbackText">
+                <%= feedback.text %>           
+              </h6>
+            </div>
+          </div>                         
+          <% }) %>      
+        </div> 
+       </div> <!-- Col-md-10 ends at feedback row-->
+     </div> <!-- Ends of feedback row-->
+     <!-- Ends of comments / feedbacks -->
+     
+    </div> <!-- Container End -->   
+    
+    <!-- ***** Footer below ***** -->
+    <%- include('./partials/footer.ejs') %>

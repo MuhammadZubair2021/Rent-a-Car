@@ -1,0 +1,798 @@
+<%-include('./partials/header.ejs')%>
+
+<style>
+  div.dashboardModal{
+    transition: all 3s;
+  }
+  .show{
+    display: block;
+  }
+  .hide{
+    display: none;
+  }
+</style>
+
+
+<div class="container" style="margin-top:90px;">
+  
+  <!-- Enlarge Image onClick -->
+   <div class="hide" id="largeImageModal">        
+    <div class="row w-100">          
+      <div class="col-md-10">
+        <img src="" class="thumbnail" alt="Car image" 
+        width="100%" height="90%" id="largeImageModalImage">
+      </div>
+      <div class="col-md-2">
+        <a href="#" class="btn btn-danger p-1 closeLargeImageModal"
+        onclick="closeLargeImageModal()">CLOSE</a>
+      </div>
+    </div>        
+  </div>        
+  <!-- End of enlarge Image onClick -->
+
+  <div class="row w-100">
+    <div class="col-md-12 col-lg-12 my-2">
+      <h1 class="text-primary welcomeUserName">
+        <strong>Welcome, <%= customer.fullName %> </strong>
+      </h1>
+    </div>            
+  </div>
+
+    <div class="row w-100 mt-5">
+
+      <div class="col-md-3 menus border-right border-top pt-3 pb-3">
+        <div class="row mb-1">
+          <div class="col-md-12">
+            <a href="#" class="customerProfile menu" style="color: rgb(245, 88, 88);"><strong>My Profile</strong></a>
+          </div>
+        </div>
+
+        <hr size="10%" width="80%" color="brown">
+
+        <div class="row my-1">
+          <div class="col-md-12 text-primary">
+           <strong> My Reservations
+            <img src="/public/images/searchIcon.jpg" width="10%" style="cursor: pointer;" 
+            onclick="toggleMyBookingsSearchBar()" class="ml-1" alt="Search"> </strong> &nbsp; &downarrow;
+          </div>
+        </div>
+        
+      <!-- Some Ejs to sort out the amount which comming from route perameter (amount) -->
+        <%
+        let newAmount = 1,
+            allFlag,
+            myReservationsGreaterAmountFlag ;
+        
+          if(amount =='1000'){
+            newAmount = reservations.length ;
+            allFlag = 'on' ;                         
+          }
+          else if(amount > reservations.length)
+          {
+            newAmount = reservations.length ;
+            myReservationsGreaterAmountFlag = 'on' ;             
+          }else{
+            newAmount = amount ;              
+          }%>
+      <!-- End of sorting Out amount, ejs -->
+
+      <!-- myReservations search box and show all Reservations hint (in case not showed) -->
+      <div class="row my-1 mr-1" >
+        <input type="text" class="form-control hide" id="myBookingsSearchBar">
+        <!-- load all customer hint -->
+        <% if(allFlag !='on'){ %>       
+          <small class="text-black-50 hide" id="myBookingsSearchHint">Kindly, 
+            <a href="/customer/dashboard/<%=(1000)%>/reservations">Load all Reservations</a>
+            for better search.</small>
+          <% } %>
+      </div>
+
+
+      <!-- Now show/render myReservations according to amount (comming from customer/dashboard route) -->
+      <div class="row">          
+        <% for(i=0 ; i<(parseInt(newAmount)) ; i++){ %> <!-- Iterate through each Reservations-->
+        <div class="col-md-10 ml-2"> 
+          <a href="#" class="myBooking menu show" onclick="showMyBookingDetails('<%=i%>')">
+            <%= (i+1) %> : <%= reservations[i].carName %></a>
+        </div>
+       <% } %>
+      </div>
+
+        <!-- Load more Reservations ul (just like select box) -->
+        <div class="row mb-1">
+          <div class="col-md-10 my-2">           
+            <ul class="unstyled">
+              <small><li onclick="loadMyBookingsVisibility()"
+                style="cursor: pointer;" class="border-left pl-2 border-top my-2">
+                    Load More Reservations ...</li></small>
+              <li class="loadReservation hide"><a href="/customer/dashboard/<%=(5)%>/reservations"> 1  -  5 reservations</a></li>
+              <li class="loadReservation hide"><a href="/customer/dashboard/<%=(10)%>/reservations">1  - 10 reservations</a></li>
+              <li class="loadReservation hide"><a href="/customer/dashboard/<%=(15)%>/reservations"> 1  - 15 reservations</a></li>
+              <li class="loadReservation hide"><a href="/customer/dashboard/<%=(20)%>/reservations">1  - 20 reservations</a></li>
+              <li class="loadReservation hide"><a href="/customer/dashboard/<%=(1000)%>/reservations">Show All reservations</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <% if(allFlag == 'on'){ %>
+          <small class="text-black-50 my-2">
+            Showed all reservations.
+          </small>
+          <% }else if(myReservationsGreaterAmountFlag == 'on'){%>
+            <small class="text-black-50 my-2">
+              Showed all reservations because requested amount is greater than reservations length .
+            </small>
+          <% }else if(newAmount>2){%>
+            <small class="text-black-50 my-2">
+              Above is your requested result.
+            </small>
+          <% } %>
+        <!--  myReservations end //////  -->
+                
+
+      <hr size="10%" width="80%" color="brown">
+
+      <div class="row my-1">
+        <div class="col-md-12 text-primary">
+         <strong> Settings </strong> &nbsp; &downarrow;
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10 ml-2">
+         <a href="#" id="updateProfile" class="updateProfile menu">Update Profile</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10 ml-2">
+          <a href="#" id="changePassword" class="changePassword menu">Change Password</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10 ml-2">
+          <a href="#" id="logout" class="menu">Logout</a>
+        </div>
+      </div>
+    </div>  <!-- End of col-md-3 (Menus)-->      
+
+      <div class="col-md-9 details pl-md-5 pt-3 pb--3 border-top">                
+
+        <!-- Customer Profile-->
+        <div class=" dashboardModal show" id="customerProfileDiv">                  
+
+          <div class="row my-2 ml-md-3">
+            <div class="col-md-8 ">
+              <h3 class="text-primary customerName"><strong><%=customer.fullName%> Profile</strong></h3>
+            </div>
+          </div>           
+          <div class="row ml-5">
+            <div class="col-md-4 lineHeight4">
+              <strong>Name:</strong>
+            </div>
+            <div class="col-md-6 lineHeight4">
+              <%=customer.fullName%>
+            </div>
+          </div>
+          
+          <div class="row ml-5">
+            <div class="col-md-4 lineHeight4">
+              <strong>CNIC:</strong>
+            </div>
+            <div class="col-md-6 lineHeight4">
+              <%=customer.cnic  %>
+            </div>
+          </div>
+        
+        <hr size="12px" width="60%" color='#007BFF'>
+        <!-- Customer Contact details -->
+          <div class="row ml-3 w-100">
+            <div class="col-md-12 text-primary">
+              Contact Details
+            </div>
+          </div>
+
+          <div class="row ml-5">
+            <div class="col-md-4 lineHeight4">
+              <strong>Phone No</strong>
+            </div>
+            <div class="col-md-8 lineHeight4">
+              <small>We will take your phone Number at the time of car reservation</small>
+            </div>
+          </div>
+
+          <div class="row ml-5">
+            <div class="col-md-4 lineHeight4">
+              <strong>Email Address:</strong>
+            </div>
+            <div class="col-md-6 lineHeight4">
+              <a href="mailto:"><%= customer.email %></a>
+              
+            </div>
+          </div>
+        <!-- End of customer contact details -->
+        <hr size="12px" width="60%" color='#007BFF'>
+
+          <div class="row ml-5">
+            <div class="col-md-4 lineHeight4">
+              <strong>Gender</strong>
+            </div>
+            <div class="col-md-6 lineHeight4">
+              <%= customer.gender %>
+            </div>
+          </div>
+
+          <hr size="12px" width="60%" color='#007BFF'>        
+
+          <div class="row mt-5 ml-md-3">
+            <div class="col-md-4 mb-1">
+              <a href="#" class="updateProfile btn btn-block btn-primary">Update Profile</a>
+            </div>
+            <div class="col-md-4 mb-1">
+              <a href="#" class="changePassword btn btn-block btn-primary">Change Password</a>
+            </div>
+          </div>
+
+        </div> <!-- End of Profile div -->
+        
+
+        <!-- Update Profile -->
+        <div class="dashboardModal hide" id="updateProfileDiv">
+          
+          <div class="card">
+            <div class="card-header">
+                <h3>Hi, <%= customer.fullName %></h3>
+            </div>
+            <div class="card-body">
+              <form action="/updateCustomer/withId/<%= customer._id %> " method="post">
+                <div class="row w-100">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="cnic">CNIC NO</label>
+                      <input required type="text" pattern="\d{5}-\d{7}-\d{1}" name="cnic" class="form-control cnic" value="<%= customer.cnic %>">
+                      <small class="form-text cnicFormate">CNIC No format : xxxxx-xxxxxxx-x </small>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="name">Full Name</label>
+                      <input required type="text" name="fullName" class="form-control" value="<%= customer.fullName %> ">
+                    </div>
+                  </div>
+                </div>               
+
+                <div class="row w-100">
+                  <div class="col-md-12">
+                    <% if (customer.gender == 'male') { %>
+                      <div class="form-group-inline">
+                        <label for="male">Male  </label>
+                        <input  type="radio" checked required id="male" value="male" name="gender"> &nbsp;&nbsp;&nbsp;
+                        <label for="male">Female   </label> 
+                        <input  type="radio" required id="female" value="female" name="gender">
+                      </div>
+                    <% } else { %>
+                      <div class="form-group-inline">
+                        <label for="male">Male  </label>
+                        <input  type="radio" required id="male" value="male" name="gender"> &nbsp;&nbsp;&nbsp;
+                        <label for="male">Female   </label> 
+                        <input  type="radio" checked required id="female" value="female" name="gender">
+                      </div>
+                    <% } %>
+                    
+                  </div>         
+                </div>               
+
+                <div class="row mt-2">
+                  <div class="col-md-6 mb-1">
+                    <button type="submit" class="form-submit btn btn-primary btn-block">
+                     Update Profile
+                    </button>
+                  </div>
+                  <div class="col-md-6 mb-1">
+                    <button type="reset" class="btn btn-warning btn-block">
+                    CLEAR FORM
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+      </div> <!-- End of Update Profile div-->
+
+
+        <!-- Change Password -->
+        <div class=" dashboardModal hide" id="changePasswordDiv">
+
+          <div class="card">
+            <div class="card-header">
+              <div class="d-flex justify-content-between">
+                <h3 class="fontSize-1rem">Change Password Portal</h3>
+              </div>
+            </div>
+            <div class="card-body">
+              <form action="/customer/changePassword/withId/<%= customer._id %> " method="post">
+                <div class="row w-100">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="oldPassword">Old Password</label>
+                      <input required type="password" class="form-control" name="oldPassword">                      
+                    </div>
+                  </div>
+                </div>
+               <div class="row w-100">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="password">Password</label>
+                      <input required type="password" class="form-control password" name="password">
+                      <span onclick="togglePassVisibility()" class="btn btn-secondary btn-sm mt-2 toggleBtn">Show</span>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="repeatPassword">Confirm Password</label>
+                      <input required type="password" class="form-control repeatPassword">
+                      <small class="repeatPasswordError form-text"></small>
+                    </div>
+                  </div>
+                </div>
+        
+                  <div class="col-md-12">
+                    <button type="submit" class="form-submit btn btn-primary btn-block"
+                    style="cursor: not-allowed;" disabled="true">Reset Password</button>
+                  </div>
+              </form>
+            </div>
+          </div> <!-- Card End (in Change Password div)-->
+
+        </div> <!-- End of Change Password div -->
+
+
+        <!-- Bookings Details (1,2,3 ..... )-->
+        <% reservations.forEach((reservation,index)=>{ %>          
+        <div class="dashboardModal hide myBookingDetailsDiv<%=index%>">
+          <div class="row my-1">
+            <div class="col-md-12 ">
+              <h3 class="text-primary fontSize-1rem d-inline"><strong><%= index+1 %> Reservation Status : 
+              </strong>
+              </h3>
+
+              <% if (!reservation.isPhoneNumberVerified) { %>
+
+                <button class="btn btn-success">PhoneNumber Not verified</button> <br>
+                <a href="/sentOTPAgain/<%= reservation.phoneNumber %>/<%= reservation.carId._id %>/<%= reservation._id %>/sms" class="text-primary" style="cursor: pointer;"> Send Code Again </a>
+                  <h6>Or get code with </h6>            
+                <a href="/sentOTPAgain/<%= reservation.phoneNumber %>/<%= reservation.carId._id %>/<%= reservation._id %>/call" class="btn btn-primary mt-2"> Call </a>
+
+              <% } else if (!reservation.isConfirmed) { %>
+                <button class="btn btn-success">Waiting For Cofirmation ...</button>
+              <% } else if (reservation.isReturned) { %>                
+                <button class="btn btn-success">Vehicle Returned</button>
+              <% } else if (reservation.isConfirmed) { %>                  
+                  <button class="btn btn-success">Active Now</button><br>
+                  <% if (reservation.invoicePath) { %>
+                    <a href="<%= reservation.invoicePath %>" download="<%= reservation.invoiceName %>" >Download Invoice PDF</a>
+                  <% }else{ %>
+                    <a href="/customer/generateInvoicePDF/<%=reservation._id%>">Generate Invoice PDF</a>
+                  <% } %>
+              <% }%>            
+                                           
+            </div>
+          </div>
+          <hr size="10%" width="80%" color="brown" class="mb-4">
+
+          <!-- By default only show carName -->
+          <div class="row w-100 carName<%= index %> mb-3">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+              <h3 class="text-primary fontSize-1rem d-inline"><%= reservation.carName %> </h3>
+              <% if (reservation.carId) { %>               
+                <a href="#" class="ml-2" onclick="toggleBookingCarDetails('<%= index %>',this)">Show Details</a>       
+              <% }else{ %>
+                <small>This Car has been deleted or hidden by the admin (you can't see car details)</small>
+              <% } %>
+            </div>
+          </div>
+          <hr width="20%" size="1px" color="#009ADA" class="position-absolute">
+          <!-- End of showing only carName -->
+          <% if (reservation.carId) { %>           
+            <div class="bookingCarDetails<%= index %> hide">
+              <div class="row mb-3 w-100">
+                  <div class="col-md-4">
+                    <img src="/<%= reservation.carId.displayImage %> " 
+                    class="thumbnail carLargeImage<%= index %> carLargeImage detailCarLargeImage" 
+                    alt="Car image" width="100%" 
+                    height="100%" onclick="enLargeThisImage(this)">
+                  </div>
+          
+                  <div class="col-md-8">
+                    <div class="card p-2">
+                      <div class="d-flex flex-column mb-3">
+                        <h2 class="carName text-primary">
+                          <%= reservation.carId.fullName %> 
+                        </h2>
+                        <div class="my-1">
+                          <span class="text-black-50">Model</span>
+                          <h5 class="text-primary"><%= reservation.carId.model %> </h5>
+                        </div>             
+                      </div>
+          
+                      <div class="mb-3">
+                        <span class="text-black-50">Cost / day</span>
+                        <h5 class="text-primary"><%= reservation.carId.rentPerDay %>  PKR / day</h5>
+                      </div>
+                      
+                      <div class="p-3" style="background-color: rgb(251 251 251)">
+                        <div class="row w-100">
+                          <div class="col-md-6">
+                            <div class="mb-2 d-flex flex-column">
+                              <h6>Colour:</h6>
+                              <span class="text-black-50"><%= reservation.carId.colour %> </span>
+                            </div>
+              
+                            <div class="mb-2 d-flex flex-column">
+                              <h6>Seat Capacity:</h6>
+                              <span class="text-black-50"><%= reservation.carId.seatCapacity %> </span>
+                            </div>
+          
+                            <div class="mb-2 d-flex flex-column">
+                              <h6>Driving Mode:</h6>
+                              <span class="text-black-50"><%= reservation.carId.drivingMode %> </span>
+                            </div>                  
+                          </div>
+          
+                          <div class="col-md-6">
+                            <div class="mb-2 d-flex flex-column">
+                              <h6>Air Condition:</h6>
+                              <span class="text-black-50"><%= reservation.carId.airCondition %> </span>
+                            </div>
+              
+                            <div class="mb-2 d-flex flex-column">
+                              <h6>Engine Capacity:</h6>
+                              <span class="text-black-50"><%= reservation.carId.engineCapacity %> </span>
+                            </div>
+                            
+                            <div class="mb-2 d-flex flex-column">
+                              <h6>Status:</h6>
+                              <span class="text-primary"><%= reservation.carId.status %> </span>
+                            </div>                  
+                          </div>
+                        </div>
+                        
+          
+                        <% if(reservation.carId.status === 'Available'){ %> 
+                          <a href="/vehicles/reserveCar/withIds/<%= reservation.carId._id %>" 
+                            class="carBooking btn btn-block btn-primary rounded-pill">Let's reserve again</a>
+                          <% } else{ %> 
+                          <a href="#" class="carBooking btn btn-block btn-secondary" 
+                          disabled="true"
+                          style="cursor: not-allowed;">Hmmmm, reserved</a>
+                          <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div> <!--  End of Row  -->
+                  
+              <% if(reservation.carId.internalImages.length>0) { %> 
+                <div class="row mb-2 mt-5 w-100">       
+                  <% (reservation.carId.internalImages).forEach((image,imageIndex )=> { %>
+                    <div class="col-md-3 mt-3">            
+                      <a href="#"><img src="/<%= image %> "  width="99%" height="200" alt="Other images" 
+                        class="thumbnail rounded carSmallImage carSmallImage<%= index %><%= imageIndex %>" 
+                        onclick="swapWithLargeImage('<%= index %>','<%= imageIndex %>')"></a>            
+                  </div>
+                  <% }) %>
+                </div>
+              <% }else{%>      
+                
+              <% } %> 
+                
+          
+              <div class="row w-100">
+                <div class="col-md-12 col-lg-12 col-sm-12">
+                    <div class="d-flex flex-column mb-2 mt-5 px-5">
+                      <span class="text-black-50">About</span>
+                      <h3 class="text-primary carName"><%= reservation.carId.fullName %> </h3>
+                    </div>
+                    <hr width="20%" size="1px" color="#009ADA">
+                </div>
+              </div>
+              
+              <% let descriptionLength  = ((reservation.carId.details).length),
+                    halfOfLength       = (descriptionLength/2)+50,
+                    firstHalfDescription    = (reservation.carId.details).slice(0,halfOfLength),
+                    secondHalfDescription   = (reservation.carId.details).slice(halfOfLength,descriptionLength);
+              %> 
+          
+              <div class="row mt-5 w-100">
+              
+                <div class="col-md-6 px-5">
+                  <p class="aboutCarText">
+                    <%= firstHalfDescription %> 
+                  </p>
+                </div>
+                <div class="col-md-6 px-5">
+                    <p class="aboutCarText mb-2">
+                      <%= secondHalfDescription %> 
+                    </p>
+                    
+                    <% if(reservation.carId.status === 'Available'){ %> 
+                      <a href="/vehicles/reserveCar/withIds/<%= reservation.carId._id %>" 
+                        class="btn btn-block btn-primary rounded-pill">Available, Want to give another try !</a>
+                      <% } else{ %> 
+                      <a href="#" class="btn btn-block btn-secondary rounded-pill" 
+                      disabled="true"
+                      style="cursor: not-allowed;">Already Reserved !</a>
+                      <% } %>        
+                </div>
+              </div>  
+              
+              <!-- Comments / feedbacks -->
+              <div class="row w-100 mt-3">                
+                <div class="col-md-12">
+                <div class="p-3 mb-2 bg-light text-dark">          
+                  <a href="/vehicles/carDetails/carFeedback/withId/<%= reservation.carId._id %> " type="button" style="float: right;" class="btn btn-md btn-success float-right">Add Feedback</a>          
+                  <br><br><br>
+                <% reservation.carId.feedbacks.forEach((feedback)=>{ %>
+                  <div class="row mt-3">
+                    <div class="col-md-12">
+                      <strong>
+                        <h4 class="text-primary feedbackAuthorName"><%= feedback.author.fullName %></h4>
+                      </strong>                                        
+                      <h6 class="feedbackText">
+                        <%= feedback.text %>           
+                      </h6>
+                    </div>
+                  </div>                         
+                  <% }) %>      
+                </div> 
+                </div> <!-- Col-md-10 ends at feedback row-->
+              </div> <!-- Ends of feedback row-->
+              <!-- Ends of comments / feedbacks -->
+            </div>
+              <!-- End of booking Car Details Div -->
+          <% } %>
+
+            <div class="row w-100 mt-5">
+              <div class="col-md-6">
+                <h4>Reservation Date <span class="float-right">:</span></h4>
+              </div>
+              <div class="col-md-6">
+                <h5><%= reservation.bookingDate %> </h5>
+              </div>
+            </div>               
+          
+            <div class="row w-100 my-2">
+              <div class="col-md-6">
+                <h4>Returning Date <span class="float-right">:</span></h4>
+              </div>
+              <div class="col-md-6">
+                <h5><%= reservation.returningDate %> </h5>
+              </div>
+            </div>                
+
+            <div class="row w-100 mb-2">
+              <div class="col-md-6">
+                <h4>Phone Number <span class="float-right">:</span></h4>
+              </div>
+              <div class="col-md-6">
+                <h5><%= reservation.phoneNumber %> </h5>
+              </div>
+            </div>
+
+            <div class="row w-100 mb-1">
+              <div class="col-md-6">
+                <h4>Total Rent <span class="float-right">:</span></h4>
+              </div>
+              <div class="col-md-6">
+                <h5><%= reservation.rent %> PKR </h5>
+              </div>
+            </div>          
+
+            <hr>
+        </div> <!-- End of bookings details (1,2,3 ...)-->
+      <% }) %>
+
+
+        <!-- LogOut -->
+        <div class="dashboardModal hide" id="logoutDiv">
+          <div class="card">
+            <div class="card-header">
+                <h3>Please Confirm ! </h3>  
+            </div>
+            <div class="card-body">
+              <form action="/logout" method="get">
+               <div class="row w-100">
+                 <div class="col-md-12">
+                  <h3 class="text-primary">Sure! , Want to log Out ?</h3>
+                 </div>
+                </div>
+
+                <div class="row w-100 my-3">
+                  <div class="col-md-4">
+                    <a class="customerProfile btn btn-primary btn-block text-white">No !</a>
+                  </div>
+                  <div class="col-md-4">
+                   <p class="text-primary">------------------------------------</p>
+                  </div>
+                  <div class="col-md-4">
+                    <button type="submit" class=" btn btn-danger btn-block">Yes !</button>
+                  </div>
+                </div>  
+              </form>
+            </div>
+          </div> <!-- Card End (in logout div)-->
+        </div> <!-- End of Logout Div-->
+
+      </div> <!-- End of col-md-9  (Details) -->
+  </div> <!-- End of 2nd row after (dashboard text) -->
+</div>
+
+<script>
+  const
+      customerProfileDiv  = document.getElementById('customerProfileDiv'),
+      changePasswordDiv   = document.getElementById('changePasswordDiv'),
+      carDetailsDiv       = document.getElementById('carDetailsDiv'),
+      logoutDiv           = document.getElementById('logoutDiv');
+
+  // Showing Customer Profile ...
+  document.querySelectorAll('.customerProfile')
+  .forEach(btn=>{
+    btn.addEventListener('click',()=>{
+    resetColor();
+    btn.style.color = '#F55858'; // Chnage color into red (look active)
+    hideAllModals();
+
+    customerProfileDiv.classList.remove('hide');
+    customerProfileDiv.classList.add('show');
+
+  })
+  })
+
+// toggle myBookings Search Bar .
+ const myBookingsSearchBar = document.querySelector('#myBookingsSearchBar'),
+      myBookingsSearchHint= document.querySelector('#myBookingsSearchHint');
+  
+ function toggleMyBookingsSearchBar(){    
+       if(myBookingsSearchBar.classList.contains('hide')){
+        myBookingsSearchBar.classList.remove('hide');
+        myBookingsSearchBar.classList.add('show');
+        if(myBookingsSearchHint){
+          myBookingsSearchHint.classList.remove('hide');
+          myBookingsSearchHint.classList.add('show');
+        }       
+       }
+       else{
+        myBookingsSearchBar.classList.remove('show');
+        myBookingsSearchBar.classList.add('hide');
+        if(myBookingsSearchHint){
+          myBookingsSearchHint.classList.remove('show');
+          myBookingsSearchHint.classList.add('hide');
+        }        
+       }     
+  }
+  
+// Search myBookings by name (functionality)
+  myBookingsSearchBar.addEventListener('keyup',()=>{
+    let searchBarValue = (myBookingsSearchBar.value).toLocaleLowerCase();
+
+    document.querySelectorAll('.myBooking').forEach(booking=>{      
+      booking.classList.add('hide');
+
+      if(((booking.textContent).toLocaleLowerCase()).includes(searchBarValue)){
+        booking.classList.remove('hide');
+        booking.classList.add('show');
+      }else{        
+        booking.classList.remove('show');
+        booking.classList.add('hide');  
+      }
+    })
+  })
+
+  
+  //Load More bookings/reservations visibility ()
+  function loadMyBookingsVisibility(){
+     document.querySelectorAll('.loadReservation').forEach(li=>{
+       if(li.classList.contains('hide')){
+        li.classList.remove('hide');
+        li.classList.add('show');
+       }
+       else{
+        li.classList.remove('show');
+        li.classList.add('hide');
+       }  
+     })
+ }
+
+ //Showing My Booking Details
+function showMyBookingDetails(index){
+  resetColor();
+  carNameElement = document.querySelectorAll('.myBooking');
+  carNameElement[index].style.color = '#F55858';
+  
+  hideAllModals();      
+  let bookingDetailsDiv = document.querySelectorAll(`.myBookingDetailsDiv${index}`);
+    
+  bookingDetailsDiv.forEach(div=>{
+    div.classList.remove('hide');
+    div.classList.add('show');
+  })
+}
+
+//showing bookingCar details 
+function toggleBookingCarDetails(index,element){
+  let carDetailsDiv = document.querySelectorAll(`.bookingCarDetails${index}`);
+  if(carDetailsDiv[0].classList.contains('hide')){
+    carDetailsDiv[0].classList.remove('hide');
+    carDetailsDiv[0].classList.add('show');
+    element.textContent = 'Hide Details';
+  }else{
+    carDetailsDiv[0].classList.remove('show');
+    carDetailsDiv[0].classList.add('hide');
+    element.textContent = 'Show Details';
+  }
+  
+}
+
+  
+  //Showing Update Profile Div
+  document.querySelectorAll('.updateProfile')
+  .forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      resetColor();
+      document.getElementById('updateProfile')
+    .style.color='#F55858'; // changePassword tab (in menus) color will be red (look active)
+
+      hideAllModals();
+
+      updateProfileDiv.classList.remove('hide');
+      updateProfileDiv.classList.add('show');
+    })
+  })
+
+ //Showing Change Password Div (Form)
+ document.querySelectorAll('.changePassword')
+  .forEach(btn=>{
+    btn.addEventListener('click',(event)=>{
+    resetColor();
+    document.getElementById('changePassword')
+    .style.color='#F55858';  // updateProfile tab (in menus) color will be red (look active)
+
+    hideAllModals();
+    changePasswordDiv.classList.remove('hide');
+    changePasswordDiv.classList.add('show');
+  })
+  }) 
+
+  // Logout Promt (confirming to LogOut)
+  const logoutBtn = document.getElementById('logout');
+  logoutBtn.addEventListener('click',()=>{
+    resetColor();
+    logoutBtn.style.color = '#F55858'; // Chnage color into red (look active)
+
+    hideAllModals();
+
+    logoutDiv.classList.remove('hide');
+    logoutDiv.classList.add('show');
+  })
+
+  // Reset color into (text-primary)
+  function resetColor(){
+    document.querySelectorAll('.menu')
+    .forEach(menu=>{
+      menu.style.color = '#007BFF' ;
+    }) 
+  }
+
+  //Hide all the modals
+  function hideAllModals(){
+    document.querySelectorAll('.dashboardModal')
+    .forEach(div=>{
+      div.classList.remove('show');
+      div.classList.add('hide');
+    })
+  }
+
+// function swapWithLargeImage(index,imageIndex); is in showCarInternalImages.js module
+</script>
+
+<!-- ***** Footer below ***** -->
+  <%- include('./partials/footer.ejs') %>
+<!-- End of footer section -->

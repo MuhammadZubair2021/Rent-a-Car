@@ -1,0 +1,314 @@
+    
+    <!-- ***** Header Area Start ***** -->
+    <%-include('./partials/header.ejs') %>
+    <!-- ***** Header Area End ***** -->
+<style>
+    .carImage{
+        transition: all 0.6s;
+    }
+    .carImage:hover{
+        transform: scale(1.05);               
+    }
+    img#searchIcon{
+        position: absolute;
+        left: 71%;
+        top: 60%;
+        width: 13%;
+        height: 18%;
+        cursor: pointer;
+    }
+</style>
+    <div class="container" style="margin-top: 100px;">
+        <div class="row w-100">
+            <div class="col-md-3">
+                <div class="row w-100 mt-3">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header" style="background-color: #007BFF;">
+                                <h5 class="text-white">
+                                    SEARCH
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <input type="text" class="form-control rounded-pill" id="searchVehicleInput"
+                                    onkeyup="findCarByName()" placeholder="by Car Name">
+                                <img src="../public/images/searchIcon.jpg" id="searchIcon" alt="searchIcon"
+                                onclick="findCarByName()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row w-100 mt-5">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header" style="background-color: #007BFF;">
+                                <h5 class="text-white">
+                                    FILTER Vehicles by
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <ul name="filterVehicle" id="filterVehicle" class="unstyled">                                    
+                                    <li class="text-secondary">Rent Per Day</li>
+                                    <div class="row w-100">
+                                        <div class="col-md-12">
+                                          <div class="form-group-inline">
+                                            <label> 2000-4000 </label>
+                                            <input  type="radio"  onclick="applyFilter('<%= reservations.length %>')" value="2000-4000" name="rentPerDay"> &nbsp;&nbsp;&nbsp;
+                                            <label> 4000-7000 </label> 
+                                            <input  type="radio"  onclick="applyFilter('<%= reservations.length %>')" value="4000-7000" name="rentPerDay">
+                                          </div>
+                                        </div>         
+                                      </div>
+                                      <hr size="10%" width="80%" color="brown" style="margin-top: 0;">
+
+                                      <li class="text-secondary">Driving Mode</li>
+                                      <div class="row w-100">
+                                          <div class="col-md-12">
+                                            <div class="form-group-inline">
+                                              <label for="auto">Auto  </label>
+                                              <input  type="radio" onclick="applyFilter('<%= reservations.length %>')" value="Auto" name="drivingMode"> &nbsp;&nbsp;&nbsp;
+                                              <label for="manual">Manual   </label> 
+                                              <input  type="radio" onclick="applyFilter('<%= reservations.length %>')" value="Manual" name="drivingMode">
+                                            </div>
+                                          </div>         
+                                        </div>
+                                        <hr size="10%" width="80%" color="brown" style="margin-top: 0;">
+
+                                    <li class="text-secondary">Air Condition</li>
+                                    <div class="row w-100">
+                                        <div class="col-md-12">
+                                          <div class="form-group-inline">
+                                            <label for="yes">Yes  </label>
+                                            <input  type="radio"  onclick="applyFilter('<%= reservations.length %>')" value="Yes" name="airCondition"> &nbsp;&nbsp;&nbsp;
+                                            <label for="no">No   </label> 
+                                            <input  type="radio"  onclick="applyFilter('<%= reservations.length %>')" value="No" name="airCondition">
+                                          </div>
+                                        </div>         
+                                      </div>                                     
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>               
+            </div>
+        <!-- End of col-md-3 (main row left section) -->
+
+            <div class="col-md-9">
+                <div class="row w-100 my-2 p-2" id="noMatchDiv" style="display:none ;">
+                    <div class="col-md-9 mx-auto">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Filter Results</h3>
+                            </div>
+                            <div class="card-body text-center">
+                                <h2 class="my-2 text-danger">No Result found for applied filter</h2>
+                                <button class="btn btn-primary rounded-pill" id="clearFilterBtn"
+                                onclick="clearAllFilters()">Clear Filters</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <% reservations.forEach(reservation => { %>
+                <% if (reservation.carId) { %>                 
+                    <div class="row w-100 border pt-2 mt-3">                    
+                        <div class="col-md-5">
+                            <img src="/<%= reservation.carId.displayImage %> " alt="Car image" class="carImage vehicleImage" width="100%" height="80%">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="d-flex flex-column mb-3">
+                                <h2 class="carName text-primary">
+                                    <%= reservation.carId.fullName %> 
+                                </h2>
+                                <div class="my-1">
+                                    <span class="text-black-50">Model</span>
+                                    <h5 class="text-primary"><%= reservation.carId.model %> </h5>
+                                </div>             
+                                </div>
+                            <hr width="90%" size="10px">
+    
+                            <% let sliceCarDetails = (reservation.carId.details).slice(0,150); %>
+    
+                            <div class="row w-100 mt-2 mb-4">
+                                <div class="col-md-12">
+                                    <p>
+                                        <%= sliceCarDetails %> 
+                                    </p>
+                                </div>
+                            </div>
+    
+                            <div class="row w-100">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="border-right border-left tableData">
+                                                <div class="d-flex flex-column">
+                                                    <small class="text-secondary">Rent/day</small>
+                                                    <h6>
+                                                        <span class="rentPerDay"><%= reservation.carId.rentPerDay%></span> PKR/day
+                                                    </h6>
+                                                </div>
+                                            </td>
+                                            <td class="border-right tableData">
+                                                <div class="d-flex flex-column">
+                                                    <small class="text-secondary">Driving Mode</small>
+                                                    <h6 class="drivingMode">
+                                                        <%= reservation.carId.drivingMode %> 
+                                                    </h6>
+                                                </div>
+                                            </td>
+                                            <td class="border-right tableData">
+                                                <div class="d-flex flex-column">
+                                                    <small class="text-secondary">Air Condition</small>
+                                                    <h6 class="airCondition">
+                                                        <%= reservation.carId.airCondition %> 
+                                                    </h6>
+                                                </div>
+                                            </td>
+                                            <td class="border-right tableData">
+                                                <div class="d-flex flex-column">
+                                                    <small class="text-secondary">Staus</small>
+                                                    <h6 class="text-primary">
+                                                        <%= reservation.carId.status %> 
+                                                    </h6>
+                                                </div>
+                                            </td>                                                              
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row w-100 mt-2 mb-4">
+                                <div class="col-md-4 my-1">
+                                    <a href="/vehicles/carDetails/withId/<%= reservation.carId._id %> "
+                                        class="btn btn-primary rounded-pill">Details View</a>
+                                </div>                            
+                                <div class="col-md-8 my-1">
+                                    <% if ((reservation.rent - reservation.paidAmounts) != 0) { %>                                    
+                                        <div class="form-group">
+                                          <p class="d-inline">Did Customer Paid the remaining 
+                                            <span class="text-primary">(<%= reservation.rent - reservation.paidAmounts %>) PKR</span></p>
+                                          <input type="checkbox" onchange="showMakeCarAvailableButton(this)" name="confirmingPaidAmounts" id="confirmingPaidAmounts" style="width: 2rem; height: 1.5rem;">
+                                        </div>                                     
+                                    <% }else{ %>
+                                        <div>
+                                            <a href="/vehicles/makeAvailable/withId/<%= reservation._id %>" class="btn btn-primary  rounded-pill">Make Car Available</a><br>
+                                            <small class="text-black-50">Returned, So make this avaiable for others</small>
+                                        </div>
+                                    <% } %>
+                                    <div class="makeCarAvailableButton" style="display: none;">
+                                        <a href="/vehicles/makeAvailable/withId/<%= reservation._id %>" class="btn btn-primary  rounded-pill">Make Car Available</a><br>
+                                        <small class="text-black-50">Returned, So make this avaiable for others</small>
+                                    </div>                                                                      
+                                </div>                                                                                 
+                            </div>
+                        </div> <!-- Col-md-8 -->                                      
+                    </div>
+                <% } else{ %>
+                    <div class="row w-100 my-2">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2>OOPs!</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row w-100">
+                                        <div class="col-md-12">
+                                            <h4 class="text-danger my-2">This Car has been deleted or hidden by the admin (you can't see car details)</h4>
+                                            <small>Still you can see the reservation details</small>
+                                            <div class="my-2">
+                                                <h5 class="text-primary fontSize-1rem d-inline">
+                                                    <strong>Reservation Status :                     
+                                                      <% if (!reservation.isPhoneNumberVerified) { %>        
+                                                        PhoneNumber Not verified
+                                                      <% } else if (!reservation.isConfirmed) { %>
+                                                        Waiting For Cofirmation ...
+                                                      <% } else if (reservation.isReturned) { %>                
+                                                        Vehicle Returned
+                                                      <% } else if (reservation.isConfirmed) { %>                  
+                                                        Active Now                                
+                                                      <%}%>            
+                                                    </strong>
+                                                  </h5>
+                                            </div>
+                                            <hr size="10%" width="80%" color="brown" class="mb-3">
+
+                                            <!-- By default only show carName -->
+                                            <div class="row w-100 carName<%= index %> mb-3">
+                                                <div class="col-md-6">
+                                                <h5 class="text-primary carName fontSize-1rem d-inline"><%= reservation.carName %> </h5>
+                                                </div>
+                                                <div class="col-md-6">
+                                                <h5 class="text-primary fontSize-1rem d-inline">(<%= reservation.referenceNo %>)</h5>
+                                                </div>
+                                            </div>
+
+                                            <hr width="20%" size="1px" color="#009ADA" class="position-absolute">
+                                            <!-- End of showing only carName -->        
+
+                                                <div class="row w-100 mt-5">
+                                                <div class="col-md-6">
+                                                    <h4>Reservation Date <span class="float-right">:</span></h4>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5><%= reservation.bookingDate %> </h5>
+                                                </div>
+                                                </div>               
+                                            
+                                                <div class="row w-100 my-2">
+                                                <div class="col-md-6">
+                                                    <h4>Returning Date <span class="float-right">:</span></h4>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5><%= reservation.returningDate %> </h5>
+                                                </div>
+                                                </div>                
+
+                                                <div class="row w-100 mb-2">
+                                                <div class="col-md-6">
+                                                    <h4>Phone Number <span class="float-right">:</span></h4>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5><%= reservation.phoneNumber %> </h5>
+                                                </div>
+                                                </div>
+
+                                                <div class="row w-100 mb-1">
+                                                <div class="col-md-6">
+                                                    <h4>Total Rent <span class="float-right">:</span></h4>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5><%= reservation.rent %> PKR </h5>
+                                                </div>
+                                                </div>          
+
+                                                <hr>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+                <% }) %> <!-- End of reservations.forEach()-->                
+            </div>                                     
+            <!-- End of col-md-8 (right section) -->
+        </div>
+        <!-- End of the main row -->
+    </div> 
+    <!--Container Ends-->         
+<script>
+    function showMakeCarAvailableButton(element){
+  let div = document.querySelectorAll(`.makeCarAvailableButton`)[0];
+  if(element.checked){
+    element.parentElement.style.display = 'none';
+    div.style.display = 'block';
+  }else{
+    element.parentElement.style.display = 'none';
+    div.style.display = 'none';
+  }
+}
+</script>
+<script src="../public/js/vehicleFilters.js"></script>
+    <!-- ***** Footer below ***** -->
+    <%- include('./partials/footer.ejs') %>

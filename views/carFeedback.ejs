@@ -1,0 +1,36 @@
+
+    <!-- ***** Header Area Start ***** -->
+    <%-include('./partials/header.ejs') %>
+    <!-- ***** Header Area End ***** -->
+
+<div class="row justify-content-center" style="margin-top: 90px;">
+<div class="col-md-6">
+<div class="card">
+    <div class="card-header">
+        Comments/feedback help us rate a Car.
+      </div>
+<article class="card-body">
+    <h2 class="card-title">Give Feedback about <strong><%=car.fullName%></strong></h2>
+<form action="/vehicles/carDetails/carFeedback/withId/<%= car._id %> " method="POST">
+	<div class="form-group">
+		<small>Comment/Feedback text</small>
+		<input type="text" name="text" required class="form-control inputField" 
+        placeholder="(<%=car.fullName%>) is an awesome Car...">		
+	</div> <!-- form-group end.// -->
+		
+        <button type="submit" class="btn btn-primary btn-block"
+        id="btn">
+            <span id="btnText">Add Feedback</span> 
+            <span id="span1" class="loadingSpan  ml-2" ></span> 
+            <span id="span2" class="loadingSpan ml-1" ></span> 
+            <span id="span3" class="loadingSpan ml-1" ></span>
+        </button>
+    </div> <!-- form-group// -->         
+</form>
+</article> <!-- card-body end .// -->
+</div> <!-- card.// -->
+</div> <!-- col.//-->
+
+
+    <!-- ***** Footer below ***** -->
+    <%- include('./partials/footer.ejs') %>   
