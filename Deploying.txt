@@ -1,0 +1,21 @@
+Steps to deploy a new node js application to heroku...
+1. SignUp into heroku.
+Now commands (in terminal) starts 
+2. type heroku login and type your credentials.
+3. Now initialize git by typing git init ( Make sure that you have git installed).
+4. Check for anything need to be added or commited by typing git status.
+5. Add those untracked files by typing git add file name like git add app.js or git add package.json etc.
+6. Now commit those need to be commited by typing git commit -m "your message for commit"
+7. Now creat space on heroku server by typing heroku create.
+8. Last but not least, push all the files by typing git push heroku master
+......
+
+If its show an error like (App error) come back to terminal and type heroku logs
+it will show you all the errors, The error i think about will be missing start script.
+So to remove that error go to package.json search for scripts object and put start script like -> "start":"node app.js " 
+
+NOw as we modified package.json file so we need to add this-> git add package.json.
+and also need changes to be commited -> git commit -m "YOur message like add start script in package.json".
+Now all we need to do is type -> git push heroku master
+Hope it will work and enjoy your app online.
+
